@@ -12,7 +12,27 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { EarlyApiClient } from './early-api-client.js';
 import { EarlyConfig } from './types.js';
-import { formatLocalTime, formatDuration, getCurrentDateLocal } from './utils.js';
+import { throwToolError, throwResourceError } from './error-utils.js';
+import {
+  CreateTimeEntryArgs,
+  GetTimeEntriesArgs,
+  EditTimeEntryArgs,
+  ListActivitiesArgs,
+  StartTimerArgs,
+} from './tool-types.js';
+import {
+  handleCreateTimeEntry,
+  handleGetTimeEntries,
+  handleEditTimeEntry,
+} from './handlers/time-entry-handlers.js';
+import { handleListActivities } from './handlers/activity-handlers.js';
+import { handleStartTimer, handleStopTimer } from './handlers/tracking-handlers.js';
+import {
+  getTimeEntriesToday,
+  getTimeEntriesWeek,
+  getActivities,
+  getActiveActivities,
+} from './handlers/resource-handlers.js';
 
 class EarlyMcpServer {
   private server: Server;
@@ -163,22 +183,22 @@ class EarlyMcpServer {
       try {
         switch (request.params.name) {
           case 'create_time_entry':
-            return await this.handleCreateTimeEntry(request.params.arguments);
+            return await this.handleCreateTimeEntry(request.params.arguments as unknown as CreateTimeEntryArgs);
           
           case 'list_activities':
-            return await this.handleListActivities(request.params.arguments as { active?: boolean } | undefined);
+            return await this.handleListActivities(request.params.arguments as unknown as ListActivitiesArgs);
           
           case 'start_timer':
-            return await this.handleStartTimer(request.params.arguments);
+            return await this.handleStartTimer(request.params.arguments as unknown as StartTimerArgs);
           
           case 'stop_timer':
             return await this.handleStopTimer();
           
           case 'get_time_entries':
-            return await this.handleGetTimeEntries(request.params.arguments);
+            return await this.handleGetTimeEntries(request.params.arguments as unknown as GetTimeEntriesArgs);
           
           case 'edit_time_entry':
-            return await this.handleEditTimeEntry(request.params.arguments);
+            return await this.handleEditTimeEntry(request.params.arguments as unknown as EditTimeEntryArgs);
           
           default:
             throw new McpError(
@@ -187,10 +207,7 @@ class EarlyMcpServer {
             );
         }
       } catch (error) {
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Tool execution failed: ${error instanceof Error ? error.message : String(error)}`
-        );
+        throwToolError(request.params.name, error instanceof Error ? error.message : String(error));
       }
     });
 
@@ -213,10 +230,7 @@ class EarlyMcpServer {
             return await this.getActiveActivities();
           
           default:
-            throw new McpError(
-              ErrorCode.InvalidRequest,
-              `Resource not found: ${uri}`
-            );
+            throwResourceError(uri);
         }
       } catch (error) {
         throw new McpError(
@@ -228,439 +242,45 @@ class EarlyMcpServer {
   }
 
   // Tool handlers
-  private async handleCreateTimeEntry(args: any) {
-    try {
-      // Check if API client is configured
-      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
-        throw new Error('API credentials not found in environment variables');
-      }
-
-      const { projectId, description, startTime, endTime, duration } = args;
-      
-      if (!projectId) {
-        throw new Error('Project ID is required');
-      }
-      
-      if (!description) {
-        throw new Error('Description is required');
-      }
-      
-      // Build the request object based on the Early API v4 structure
-      const createRequest: any = {
-        activityId: projectId, // Early API uses 'activityId' not 'projectId'
-        note: {
-          text: description
-        }
-      };
-      
-      // Helper function to format timestamps for Early API (without Z suffix)
-      const formatTimestamp = (dateInput: string | Date): string => {
-        const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-        return date.toISOString().replace('Z', '');
-      };
-      
-      // Handle time parameters - prioritize startTime/endTime over duration
-      if (startTime && endTime) {
-        createRequest.startedAt = formatTimestamp(startTime);
-        createRequest.stoppedAt = formatTimestamp(endTime);
-      } else if (duration) {
-        // If only duration is provided, create entry for current time minus duration
-        const now = new Date();
-        const start = new Date(now.getTime() - (duration * 60 * 1000));
-        createRequest.startedAt = formatTimestamp(start);
-        createRequest.stoppedAt = formatTimestamp(now);
-      } else if (startTime && !endTime) {
-        // If only start time is provided, assume it's still running (no stoppedAt)
-        createRequest.startedAt = formatTimestamp(startTime);
-      } else {
-        // Default to current time if no time parameters provided
-        createRequest.startedAt = formatTimestamp(new Date());
-      }
-      
-      // Create the time entry
-      const newEntry = await this.apiClient.createTimeEntry(createRequest);
-      
-      // Format response for user - handle the API response structure
-      // The API response structure varies, so we need to be flexible
-      const activityName = (newEntry as any).activity?.name || 'Unknown';
-      const entryId = (newEntry as any).id || 'Unknown';
-      const durationInfo = (newEntry as any).duration;
-      
-      let startTimeFormatted = 'Unknown';
-      let endTimeFormatted = 'Still running';
-      let durationText = 'In progress';
-      
-      if (durationInfo) {
-        if (durationInfo.startedAt) {
-          startTimeFormatted = formatLocalTime(durationInfo.startedAt);
-        }
-        if (durationInfo.stoppedAt) {
-          endTimeFormatted = formatLocalTime(durationInfo.stoppedAt);
-          durationText = formatDuration(durationInfo.startedAt, durationInfo.stoppedAt);
-        }
-      } else {
-        // Fallback to using the request data if response doesn't have duration info
-        startTimeFormatted = formatLocalTime(createRequest.startedAt);
-        if (createRequest.stoppedAt) {
-          endTimeFormatted = formatLocalTime(createRequest.stoppedAt);
-          durationText = formatDuration(createRequest.startedAt, createRequest.stoppedAt);
-        }
-      }
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `✅ Time entry created successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${description}\n- Start: ${startTimeFormatted}\n- End: ${endTimeFormatted}\n- Duration: ${durationText}\n- ID: ${entryId}\n\nRaw response: ${JSON.stringify(newEntry, null, 2)}`,
-          },
-        ],
-      };
-    } catch (error) {
-      const hasApiKey = !!process.env['EARLY_API_KEY'];
-      const hasApiSecret = !!process.env['EARLY_API_SECRET'];
-      
-      // Enhanced error reporting
-      let errorMsg = 'Unknown error';
-      let errorDetails = '';
-      
-      if (error instanceof Error) {
-        errorMsg = error.message;
-      }
-      
-      // Check if it's an API error with more details
-      if (error && typeof error === 'object') {
-        const apiError = error as any;
-        if (apiError.code) {
-          errorMsg = `API Error ${apiError.code}: ${apiError.message || errorMsg}`;
-        }
-        if (apiError.details) {
-          errorDetails = `\n\nAPI Error Details: ${JSON.stringify(apiError.details, null, 2)}`;
-        }
-        // Also show the full error object for debugging
-        errorDetails += `\n\nFull error object: ${JSON.stringify(error, null, 2)}`;
-      }
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `❌ Failed to create time entry: ${errorMsg}\n\nDebug info:\n- API Key: ${hasApiKey ? 'Present' : 'Missing'}\n- API Secret: ${hasApiSecret ? 'Present' : 'Missing'}\n- Base URL: ${process.env['EARLY_BASE_URL'] || 'not set'}\n\nProvided arguments: ${JSON.stringify(args, null, 2)}${errorDetails}`,
-          },
-        ],
-      };
-    }
+  private async handleCreateTimeEntry(args: CreateTimeEntryArgs) {
+    return handleCreateTimeEntry(this.apiClient, args);
   }
 
-  private async handleListActivities(args: { active?: boolean } | undefined) {
-    try {
-      // Check if API client is configured
-      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
-        throw new Error('API credentials not found in environment variables');
-      }
-
-      const activities = args?.active ? 
-        await this.apiClient.getActiveActivities() : 
-        await this.apiClient.getAllActivities();
-      const activeActivities = activities.filter(a => a); // Filter out any null/undefined
-      const filter = args?.active ? 'active only' : 'all activities';
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Activities (${filter}): ${activeActivities.length} found\n\n${activeActivities.map((activity: any, i: number) => {
-              return `${i + 1}. ${activity.name} (ID: ${activity.id})`;
-            }).join('\n')}`,
-          },
-        ],
-      };
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      const hasApiKey = !!process.env['EARLY_API_KEY'];
-      const hasApiSecret = !!process.env['EARLY_API_SECRET'];
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `❌ Failed to get activities: ${errorMsg}\n\nDebug info:\n- API Key: ${hasApiKey ? 'Present' : 'Missing'}\n- API Secret: ${hasApiSecret ? 'Present' : 'Missing'}\n- Base URL: ${process.env['EARLY_BASE_URL'] || 'not set'}`,
-          },
-        ],
-      };
-    }
+  private async handleListActivities(args?: ListActivitiesArgs) {
+    return handleListActivities(this.apiClient, args);
   }
 
-  private async handleStartTimer(args: any) {
-    // TODO: Implement with actual API call
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Timer started (placeholder): ${JSON.stringify(args)}`,
-        },
-      ],
-    };
+  private async handleStartTimer(args: StartTimerArgs) {
+    return handleStartTimer(this.apiClient, args);
   }
 
   private async handleStopTimer() {
-    // TODO: Implement with actual API call
-    return {
-      content: [
-        {
-          type: 'text',
-          text: 'Timer stopped (placeholder)',
-        },
-      ],
-    };
+    return handleStopTimer(this.apiClient);
   }
 
-  private async handleGetTimeEntries(args: any) {
-    try {
-      // Check if API client is configured
-      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
-        throw new Error('API credentials not found in environment variables');
-      }
-
-      let entries;
-      
-      if (args && args.startDate && args.endDate) {
-        // Get entries for specific date range
-        const startDateTime = args.startDate + 'T00:00:00.000';
-        const endDateTime = args.endDate + 'T23:59:59.999';
-        const response = await this.apiClient.getTimeEntriesInRange(startDateTime, endDateTime);
-        entries = response.timeEntries || [];
-      } else {
-        // Default to today's entries
-        entries = await this.apiClient.getTodayTimeEntries();
-      }
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Found ${entries.length} time entries:\n\n${entries.map((entry: any, i: number) => {
-              const activity = entry.activity?.name || 'Unknown';
-              const start = formatLocalTime(entry.duration.startedAt);
-              const end = formatLocalTime(entry.duration.stoppedAt);
-              const duration = formatDuration(entry.duration.startedAt, entry.duration.stoppedAt);
-              return `${i + 1}. ${activity}: ${start} - ${end} (${duration})`;
-            }).join('\n')}`,
-          },
-        ],
-      };
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      const hasApiKey = !!process.env['EARLY_API_KEY'];
-      const hasApiSecret = !!process.env['EARLY_API_SECRET'];
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `❌ Failed to get time entries: ${errorMsg}\n\nDebug info:\n- API Key: ${hasApiKey ? 'Present' : 'Missing'}\n- API Secret: ${hasApiSecret ? 'Present' : 'Missing'}\n- Base URL: ${process.env['EARLY_BASE_URL'] || 'not set'}`,
-          },
-        ],
-      };
-    }
+  private async handleGetTimeEntries(args: GetTimeEntriesArgs) {
+    return handleGetTimeEntries(this.apiClient, args);
   }
 
-  private async handleEditTimeEntry(args: any) {
-    try {
-      // Check if API client is configured
-      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
-        throw new Error('API credentials not found in environment variables');
-      }
-
-      const { timeEntryId, startTime, endTime, activityId, description } = args;
-      
-      if (!timeEntryId) {
-        throw new Error('Time entry ID is required');
-      }
-
-      // Build update request object
-      const updateRequest: any = {};
-      
-      if (startTime) {
-        updateRequest.startedAt = startTime;
-      }
-      
-      if (endTime) {
-        updateRequest.stoppedAt = endTime;
-      }
-      
-      if (activityId) {
-        updateRequest.activityId = activityId;
-      }
-      
-      if (description !== undefined) {
-        updateRequest.note = { text: description };
-      }
-      
-      if (Object.keys(updateRequest).length === 0) {
-        throw new Error('At least one field must be provided to update');
-      }
-
-      // Update the time entry
-      const updatedEntry = await this.apiClient.updateTimeEntry(timeEntryId, updateRequest);
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `✅ Time entry updated successfully:\n\nID: ${timeEntryId}\nUpdated fields: ${Object.keys(updateRequest).join(', ')}\n\nEntry details:\n${JSON.stringify(updatedEntry, null, 2)}`,
-          },
-        ],
-      };
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      const hasApiKey = !!process.env['EARLY_API_KEY'];
-      const hasApiSecret = !!process.env['EARLY_API_SECRET'];
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `❌ Failed to edit time entry: ${errorMsg}\n\nDebug info:\n- API Key: ${hasApiKey ? 'Present' : 'Missing'}\n- API Secret: ${hasApiSecret ? 'Present' : 'Missing'}\n- Base URL: ${process.env['EARLY_BASE_URL'] || 'not set'}`,
-          },
-        ],
-      };
-    }
+  private async handleEditTimeEntry(args: EditTimeEntryArgs) {
+    return handleEditTimeEntry(this.apiClient, args);
   }
 
   // Resource handlers
   private async getTimeEntriesToday() {
-    try {
-      // Check if API client is configured
-      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
-        throw new Error('API credentials not found in environment variables');
-      }
-      
-      const entries = await this.apiClient.getTodayTimeEntries();
-      return {
-        contents: [
-          {
-            uri: 'early://time-entries/today',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              date: getCurrentDateLocal(),
-              entries: entries,
-              success: true,
-              count: entries.length,
-            }),
-          },
-        ],
-      };
-    } catch (error) {
-      return {
-        contents: [
-          {
-            uri: 'early://time-entries/today',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              error: error instanceof Error ? error.message : 'Unknown error',
-              entries: [],
-              success: false,
-              debug: {
-                hasApiKey: !!process.env['EARLY_API_KEY'],
-                hasApiSecret: !!process.env['EARLY_API_SECRET'],
-                baseUrl: process.env['EARLY_BASE_URL'] || 'not set',
-              },
-            }),
-          },
-        ],
-      };
-    }
+    return getTimeEntriesToday(this.apiClient);
   }
 
   private async getTimeEntriesWeek() {
-    try {
-      const entries = await this.apiClient.getThisWeekTimeEntries();
-      return {
-        contents: [
-          {
-            uri: 'early://time-entries/week',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              week: 'current',
-              entries: entries,
-            }),
-          },
-        ],
-      };
-    } catch (error) {
-      return {
-        contents: [
-          {
-            uri: 'early://time-entries/week',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              error: error instanceof Error ? error.message : 'Unknown error',
-              entries: [],
-            }),
-          },
-        ],
-      };
-    }
+    return getTimeEntriesWeek(this.apiClient);
   }
 
   private async getActivities() {
-    try {
-      const activities = await this.apiClient.getAllActivities();
-      return {
-        contents: [
-          {
-            uri: 'early://activities',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              activities: activities,
-            }),
-          },
-        ],
-      };
-    } catch (error) {
-      return {
-        contents: [
-          {
-            uri: 'early://activities',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              error: error instanceof Error ? error.message : 'Unknown error',
-              activities: [],
-            }),
-          },
-        ],
-      };
-    }
+    return getActivities(this.apiClient);
   }
 
   private async getActiveActivities() {
-    try {
-      const activities = await this.apiClient.getActiveActivities();
-      return {
-        contents: [
-          {
-            uri: 'early://activities/active',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              activities: activities,
-            }),
-          },
-        ],
-      };
-    } catch (error) {
-      return {
-        contents: [
-          {
-            uri: 'early://activities/active',
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              error: error instanceof Error ? error.message : 'Unknown error',
-              activities: [],
-            }),
-          },
-        ],
-      };
-    }
+    return getActiveActivities(this.apiClient);
   }
 
   async run() {
