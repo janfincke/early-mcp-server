@@ -81,12 +81,12 @@ npm run start:env
 
 This should start the server without errors. Use `Ctrl+C` to stop it.
 
-### Method 2: Run Test Client
+### Method 2: Run Unit Tests
 
-Use the built-in test client to verify MCP functionality:
+Use the built-in test suite to verify MCP functionality:
 
 ```bash
-node test-client.js
+npm test
 ```
 
 Expected output:
@@ -158,7 +158,6 @@ early-mcp-server/
 ├── tests/                  # Jest unit tests  
 ├── docs/                   # Documentation (this site)
 ├── start.js               # Entry point with env loading
-├── test-client.js         # MCP test client
 └── .env                   # Environment variables (create this)
 ```
 
@@ -179,7 +178,6 @@ Now that you have the server running:
 - [ ] EARLY API credentials obtained
 - [ ] `.env` file configured with credentials
 - [ ] Server starts without errors (`npm run start:env`)
-- [ ] Test client runs successfully (`node test-client.js`)
 - [ ] Unit tests pass (`npm test`)
 
 **You're ready to start using the EARLY MCP Server!**

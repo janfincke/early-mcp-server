@@ -11,7 +11,7 @@ Before diving into specific issues, run through this quick checklist:
 - [ ] **Project Built**: `npm run build` completed without errors
 - [ ] **API Credentials**: `.env` file exists with valid `EARLY_API_KEY` and `EARLY_API_SECRET`
 - [ ] **Server Starts**: `npm run start:env` runs without immediate errors
-- [ ] **Test Client Works**: `node test-client.js` shows successful tool execution
+- [ ] **Unit Tests Pass**: `npm test` shows all tests passing
 
 If any of these fail, start with the corresponding section below.
 
@@ -302,8 +302,8 @@ npm install
 
 1. **Test server independently:**
    ```bash
-   # Should list tools successfully
-   node test-client.js
+   # Should run all tests successfully
+   npm test
    ```
 
 2. **Check Claude Desktop logs:**
@@ -444,9 +444,9 @@ npm install
 
 2. **Verify activity IDs:**
    ```bash
-   # Ensure activities exist
-   node test-client.js
-   # Look for valid activity IDs in the response
+   # Test server startup and check logs
+   npm run start:env
+   # Use Claude Desktop or another MCP client to test list_activities
    ```
 
 ### Time Entry Creation Fails
@@ -559,9 +559,9 @@ When reporting issues, include:
    npm run start:env 2>&1 | head -20
    ```
 
-3. **Test Client Output:**
+3. **Test Suite Output:**
    ```bash
-   node test-client.js 2>&1
+   npm test 2>&1
    ```
 
 ### Where to Get Help

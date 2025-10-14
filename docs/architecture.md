@@ -394,11 +394,11 @@ describe('handleCreateTimeEntry', () => {
 **Real API**: Uses test credentials for end-to-end validation
 **Scenarios**: Complete user workflows
 
-### Test Client
+### Test Suite
 
-**Purpose**: Manual testing and integration validation
-**Implementation**: Simple MCP client that exercises all functionality
-**Usage**: `node test-client.js`
+**Purpose**: Automated testing and integration validation
+**Implementation**: Comprehensive Jest test suite covering all functionality
+**Usage**: `npm test`
 
 ## Deployment Architecture {#deployment}
 

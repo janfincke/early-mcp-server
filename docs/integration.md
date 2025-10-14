@@ -268,12 +268,13 @@ Once connected, your client can access:
 
 ## Development and Testing {#development}
 
-### Test Client
+### Server Testing
 
-The EARLY MCP Server includes a test client for development:
+The EARLY MCP Server can be tested using several methods:
 
 ```bash
-node test-client.js
+# Run the unit test suite
+npm test
 ```
 
 This validates:
@@ -416,8 +417,8 @@ Run through this checklist when integration isn't working:
 
 2. **API credentials work:**
    ```bash
-   node test-client.js
-   # Should show activities list
+   npm test
+   # Should run successfully with valid credentials in .env
    ```
 
 3. **Client configuration is correct:**

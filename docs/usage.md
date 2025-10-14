@@ -405,7 +405,7 @@ async function healthCheck() {
 #!/bin/bash
 echo "Testing EARLY MCP Server..."
 
-node test-client.js > test_results.log 2>&1
+npm test > test_results.log 2>&1
 
 if [ $? -eq 0 ]; then
   echo "Tests passed"
