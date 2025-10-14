@@ -1,0 +1,112 @@
+site_name: EARLY MCP Server
+site_description: Model Context Protocol server for EARLY app time tracking API
+site_author: Jan Fincke
+site_url: https://janfincke.github.io/early-mcp-server/
+
+repo_name: janfincke/early-mcp-server
+repo_url: https://github.com/janfincke/early-mcp-server
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.select
+    - content.action.edit
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: janfincke
+      repo: early-mcp-server
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - minify:
+      minify_html: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Tools:
+    - tools/index.md
+    - Create Time Entry: tools/create_time_entry.md
+    - Edit Time Entry: tools/edit_time_entry.md
+    - Get Time Entries: tools/get_time_entries.md
+    - List Activities: tools/list_activities.md
+    - Start Timer: tools/start_timer.md
+    - Stop Timer: tools/stop_timer.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/janfincke/early-mcp-server
+  version:
+    provider: mike
+
+extra_css:
+  - assets/extra.css
+
+watch:
+  - docs/

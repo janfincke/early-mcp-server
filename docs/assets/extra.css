@@ -1,0 +1,86 @@
+/* Custom styles for EARLY MCP Server documentation */
+
+/* Tool parameter tables */
+.md-typeset table {
+  font-size: 0.9em;
+}
+
+.md-typeset table th {
+  background-color: var(--md-primary-fg-color--light);
+  color: white;
+}
+
+/* Code blocks */
+.highlight pre {
+  border-radius: 8px;
+}
+
+/* Admonitions for tool examples */
+.md-typeset .admonition.example {
+  border-left-color: #4caf50;
+}
+
+.md-typeset .admonition.example > .admonition-title {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-left-color: #4caf50;
+}
+
+.md-typeset .admonition.example > .admonition-title::before {
+  background-color: #4caf50;
+  -webkit-mask-image: var(--md-admonition-icon--example);
+          mask-image: var(--md-admonition-icon--example);
+}
+
+/* Tool status badges */
+.tool-status-implemented {
+  background-color: #4caf50;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.tool-status-partial {
+  background-color: #ff9800;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+/* Schema tables */
+.schema-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.schema-table th,
+.schema-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.schema-table th {
+  background-color: var(--md-primary-fg-color--light);
+  color: white;
+  font-weight: bold;
+}
+
+.schema-table tr:nth-child(even) {
+  background-color: var(--md-code-bg-color);
+}
+
+/* Required parameter indicator */
+.param-required {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.param-optional {
+  color: #666;
+  font-style: italic;
+}

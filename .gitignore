@@ -88,3 +88,6 @@ coverage/
 
 # TernJS port file
 .tern-port
+
+# MkDocs build output
+site/
