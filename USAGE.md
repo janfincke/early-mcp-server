@@ -1,6 +1,27 @@
-# Early App MCP Server - Usage Guide
+# Usage Guide ➡️ [docs/usage.md](docs/usage.md)
 
-## 🚀 Quick Start
+**The comprehensive usage guide has moved to the documentation site:**
+
+**📖 [Complete Documentation](https://janfincke.github.io/early-mcp-server/)**
+
+## Quick Links
+
+- **[Getting Started](docs/getting-started.md)** - Installation and setup
+- **[Usage Guide](docs/usage.md)** - Advanced patterns and real-world examples  
+- **[Tools Reference](docs/tools/index.md)** - Complete documentation for all 6 tools
+- **[Integration Guide](docs/integration.md)** - Claude Desktop and MCP client setup
+- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
+- **[Architecture](docs/architecture.md)** - Technical design and implementation
+
+---
+
+*This file is kept in the repository root for GitHub searchability. All detailed documentation is now available in the `/docs` directory and published at [janfincke.github.io/early-mcp-server](https://janfincke.github.io/early-mcp-server/).*
+
+---
+
+# Legacy Content (for reference)
+
+## Quick Start
 
 ### Prerequisites
 

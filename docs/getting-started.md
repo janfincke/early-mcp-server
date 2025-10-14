@@ -167,9 +167,9 @@ early-mcp-server/
 Now that you have the server running:
 
 1. **[Learn the Tools](tools/index.md)** - Explore all 6 time tracking tools
-2. **Claude Desktop Integration** - Set up integration (see USAGE.md for now)  
-3. **Test Functionality** - Try real time tracking operations
-4. **Troubleshooting** - Common issues (see USAGE.md for now)
+2. **[Claude Desktop Integration](integration.md)** - Set up integration with detailed guide  
+3. **[Advanced Usage](usage.md)** - Real-world patterns and best practices
+4. **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 
 ## Quick Start Checklist {#checklist}
 

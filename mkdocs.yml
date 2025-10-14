@@ -89,6 +89,7 @@ plugins:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - Usage: usage.md
   - Tools:
     - tools/index.md
     - Create Time Entry: tools/create_time_entry.md
@@ -97,6 +98,9 @@ nav:
     - List Activities: tools/list_activities.md
     - Start Timer: tools/start_timer.md
     - Stop Timer: tools/stop_timer.md
+  - Integration: integration.md
+  - Architecture: architecture.md
+  - Troubleshooting: troubleshooting.md
 
 extra:
   social:

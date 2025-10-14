@@ -123,7 +123,7 @@ Ask Claude naturally:
 - **New to MCP?** Start with [`list_activities`](list_activities.md) to get familiar
 - **Want to track time?** Try [`start_timer`](start_timer.md) and [`stop_timer`](stop_timer.md)
 - **Need to log past work?** Use [`create_time_entry`](create_time_entry.md)  
-- **Ready for integration?** See USAGE.md in the repository for integration details
+- **Ready for integration?** See the [Integration Guide](../integration.md) for setup details
 
 ---
 

@@ -45,7 +45,7 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
     Connect with Claude Desktop and other MCP clients
 
-    [:octicons-arrow-right-24: Coming Soon](#)
+    [:octicons-arrow-right-24: Integration](integration.md)
 
 -   :material-help-circle:{ .lg .middle } **Troubleshooting**
 
@@ -53,7 +53,7 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
     Common issues and solutions
 
-    [:octicons-arrow-right-24: Coming Soon](#)
+    [:octicons-arrow-right-24: Get help](troubleshooting.md)
 
 </div>
 
@@ -100,8 +100,8 @@ The server is fully functional with:
 
 1. **[Get Started](getting-started.md)** - Install and configure the server
 2. **[Explore Tools](tools/index.md)** - Learn about available functionality  
-3. **Integration** - Connect with Claude Desktop or other clients (coming soon)
-4. **Architecture** - Understand the technical design (coming soon)
+3. **[Integration](integration.md)** - Connect with Claude Desktop or other clients
+4. **[Architecture](architecture.md)** - Understand the technical design
 
 ## Contributing {#contributing}
 
