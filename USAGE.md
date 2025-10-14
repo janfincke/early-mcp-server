@@ -86,9 +86,9 @@ npm test
 
 The server provides these tools for time tracking:
 
-### 1. `list_activities`
+### 1. `list_activities` ✅ Fully Implemented
 
-Get all activities from EARLY
+Get all activities from EARLY using live API
 
 ```json
 {
@@ -99,40 +99,63 @@ Get all activities from EARLY
 }
 ```
 
-### 2. `create_time_entry`
+### 2. `create_time_entry` ✅ Fully Implemented
 
-Create a new time entry (placeholder implementation)
+Create a new time entry using live API with flexible parameter combinations
+
+**Required Parameters:**
+- `projectId` - Activity/Project ID (get from `list_activities`)
+- `description` - Time entry description/note
+
+**Time Parameters (choose one):**
+1. `startTime + endTime` - Specific time range
+2. `duration` - Duration in minutes (creates entry ending now)
 
 ```json
+// Example 1: Specific time range
 {
     "name": "create_time_entry",
     "arguments": {
-        "projectId": "proj_123",
-        "description": "Working on feature X",
-        "startTime": "2024-01-01T10:00:00Z", // optional
-        "endTime": "2024-01-01T11:00:00Z", // optional
-        "duration": 60 // optional (minutes)
+        "projectId": "935607",
+        "description": "Client meeting",
+        "startTime": "2025-10-14T08:00:00Z",
+        "endTime": "2025-10-14T09:00:00Z"
+    }
+}
+
+// Example 2: Duration-based (ends now)
+{
+    "name": "create_time_entry",
+    "arguments": {
+        "projectId": "935607",
+        "description": "Code review",
+        "duration": 45
     }
 }
 ```
 
-### 3. `start_timer`
+**Important Notes:**
+- Early API requires both start AND end times (no running timers)
+- Duplicate time entries for same activity/timeframe will be replaced
+- Returns detailed entry info with local time formatting
 
-Start tracking time (placeholder implementation)
+### 3. `start_timer` 🚧 Planned
+
+Start tracking time (API integration planned - use `create_time_entry` for completed entries)
 
 ```json
 {
     "name": "start_timer",
     "arguments": {
-        "projectId": "proj_123",
+        "projectId": "935607",
         "description": "Working on something" // optional
     }
 }
 ```
 
-### 4. `stop_timer`
+### 4. `stop_timer` 🚧 Planned
 
-Stop the current timer (placeholder implementation)
+Stop the current timer (API integration planned - use `create_time_entry` for completed entries)
 
 ```json
 {
@@ -141,9 +164,9 @@ Stop the current timer (placeholder implementation)
 }
 ```
 
-### 5. `get_time_entries`
+### 5. `get_time_entries` ✅ Fully Implemented
 
-Get time entries for a date range (placeholder implementation)
+Get time entries for a date range using live API
 
 ```json
 {
@@ -156,23 +179,40 @@ Get time entries for a date range (placeholder implementation)
 }
 ```
 
+### 6. `edit_time_entry` ✅ Fully Implemented
+
+Edit an existing time entry using live API
+
+```json
+{
+    "name": "edit_time_entry",
+    "arguments": {
+        "timeEntryId": "entry_123", // required
+        "startTime": "2024-01-01T10:00:00Z", // optional (ISO 8601)
+        "endTime": "2024-01-01T11:00:00Z", // optional (ISO 8601)
+        "activityId": "activity_456", // optional
+        "description": "Updated description" // optional
+    }
+}
+```
+
 ## 📋 Available Resources
 
-### 1. `early://time-entries/today`
+### 1. `early://time-entries/today` ✅ Live API
 
-Today's time entries (placeholder data)
+Today's time entries from EARLY API
 
-### 2. `early://time-entries/week`
+### 2. `early://time-entries/week` ✅ Live API
 
-This week's time entries (placeholder data)
+This week's time entries from EARLY API
 
-### 3. `early://projects`
+### 3. `early://activities` ✅ Live API
 
-All projects (placeholder data)
+All projects (activities) from EARLY API
 
-### 4. `early://projects/active`
+### 4. `early://activities/active` ✅ Live API
 
-Active projects only (placeholder data)
+Active projects only from EARLY API
 
 ## 🔗 Integration with MCP Clients
 
@@ -190,7 +230,7 @@ Active projects only (placeholder data)
     "mcpServers": {
         "early-time-tracker": {
             "command": "node",
-            "args": ["E:\\early-app-mcp-server\\start.js"],
+            "args": ["/absolute/path/to/your/early-app-mcp-server/start.js"],
             "env": {
                 "EARLY_API_KEY": "your-api-key-here",
                 "EARLY_API_SECRET": "your-api-secret-here",
@@ -214,7 +254,7 @@ For other MCP clients, use:
 
 -   **Command:** `node`
 -   **Args:** `["path/to/your/start.js"]`
--   **Working Directory:** `E:\early-app-mcp-server`
+-   **Working Directory:** `/absolute/path/to/your/early-app-mcp-server`
 -   **Environment Variables:** Set `EARLY_API_KEY`, `EARLY_API_SECRET`, and `EARLY_BASE_URL`
 
 ## 🔍 Troubleshooting
@@ -227,10 +267,12 @@ For other MCP clients, use:
 
 ### API Calls Failing
 
--   Verify your EARLY_API_KEY and EARLY_API_SECRET are correct
--   Check if the API endpoint is accessible
--   Review server logs for detailed error messages
--   Ensure both API key and secret are from the same EARLY account
+-   **Verify credentials**: Use `list_activities` tool to test - it will show API key/secret status
+-   **Check environment variables**: Ensure EARLY_API_KEY and EARLY_API_SECRET are set correctly
+-   **Test API endpoint**: Verify https://api.early.app is accessible from your network
+-   **Review error messages**: Look for detailed error messages in tool responses
+-   **Account matching**: Ensure both API key and secret are from the same EARLY account
+-   **API format**: Credentials should be in the format provided by EARLY app settings
 
 **Authentication Method**: The server uses Basic Auth with `key:secret` by default. If EARLY API uses a different method, edit the authentication section in `src/early-api-client.ts` and uncomment the appropriate method.
 
@@ -252,6 +294,10 @@ node test-client.js
 
 # Check if port/stdio communication works
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{}}}' | npm run start:env
+
+# Test API credentials specifically
+# Use Claude or another MCP client to call: "list my activities"
+# This will show if credentials are working or provide debug info
 ```
 
 ## 📝 Development

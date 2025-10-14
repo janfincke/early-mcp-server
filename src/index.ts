@@ -143,15 +143,15 @@ class EarlyMcpServer {
             mimeType: 'application/json',
           },
           {
-            uri: 'early://projects',
-            name: 'All Projects',
-            description: 'List of all projects',
+            uri: 'early://activities',
+            name: 'All Activities',
+            description: 'List of all activities',
             mimeType: 'application/json',
           },
           {
-            uri: 'early://projects/active',
-            name: 'Active Projects',
-            description: 'List of active projects only',
+            uri: 'early://activities/active',
+            name: 'Active Activities',
+            description: 'List of active activities only',
             mimeType: 'application/json',
           },
         ],
@@ -206,11 +206,11 @@ class EarlyMcpServer {
           case 'early://time-entries/week':
             return await this.getTimeEntriesWeek();
           
-          case 'early://projects':
-            return await this.getProjects();
+          case 'early://activities':
+            return await this.getActivities();
           
-          case 'early://projects/active':
-            return await this.getActiveProjects();
+          case 'early://activities/active':
+            return await this.getActiveActivities();
           
           default:
             throw new McpError(
@@ -603,13 +603,13 @@ class EarlyMcpServer {
     }
   }
 
-  private async getProjects() {
+  private async getActivities() {
     try {
       const activities = await this.apiClient.getAllActivities();
       return {
         contents: [
           {
-            uri: 'early://projects',
+            uri: 'early://activities',
             mimeType: 'application/json',
             text: JSON.stringify({
               activities: activities,
@@ -621,7 +621,7 @@ class EarlyMcpServer {
       return {
         contents: [
           {
-            uri: 'early://projects',
+            uri: 'early://activities',
             mimeType: 'application/json',
             text: JSON.stringify({
               error: error instanceof Error ? error.message : 'Unknown error',
@@ -633,13 +633,13 @@ class EarlyMcpServer {
     }
   }
 
-  private async getActiveProjects() {
+  private async getActiveActivities() {
     try {
       const activities = await this.apiClient.getActiveActivities();
       return {
         contents: [
           {
-            uri: 'early://projects/active',
+            uri: 'early://activities/active',
             mimeType: 'application/json',
             text: JSON.stringify({
               activities: activities,
@@ -651,7 +651,7 @@ class EarlyMcpServer {
       return {
         contents: [
           {
-            uri: 'early://projects/active',
+            uri: 'early://activities/active',
             mimeType: 'application/json',
             text: JSON.stringify({
               error: error instanceof Error ? error.message : 'Unknown error',

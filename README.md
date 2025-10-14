@@ -12,66 +12,100 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 - **Documentation**: Postman Collection
 - **Authentication**: API Key (assumed)
 
-## Planned MCP Implementation
+## MCP Implementation
 
-### Tools
+### Tools (✅ = Implemented, 🚧 = Planned)
 
 #### Time Entry Management
-- `create_time_entry` - Create a new time entry
-- `update_time_entry` - Update an existing time entry
-- `delete_time_entry` - Delete a time entry
-- `start_timer` - Start tracking time for a project
-- `stop_timer` - Stop the currently running timer
-- `get_active_timer` - Get currently running timer information
+- ✅ `create_time_entry` - Create a new time entry with flexible time parameters
+- ✅ `edit_time_entry` - Edit an existing time entry
+- ✅ `get_time_entries` - Get time entries for a date range
+- 🚧 `delete_time_entry` - Delete a time entry
+- 🚧 `start_timer` - Start tracking time for a project  
+- 🚧 `stop_timer` - Stop the currently running timer
+- 🚧 `get_active_timer` - Get currently running timer information
 
 #### Project Management
-- `create_project` - Create a new project
-- `update_project` - Update project details
-- `delete_project` - Delete a project
-- `list_activities` - Get all activities
-- `get_project` - Get specific project details
+- ✅ `list_activities` - Get all activities (projects)
+- 🚧 `create_project` - Create a new project
+- 🚧 `update_project` - Update project details
+- 🚧 `delete_project` - Delete a project
+- 🚧 `get_project` - Get specific project details
 
 #### Reporting and Analytics
-- `generate_time_report` - Generate time reports for specified periods
-- `get_productivity_stats` - Get productivity statistics
-- `export_timesheet` - Export timesheet data
+- 🚧 `generate_time_report` - Generate time reports for specified periods
+- 🚧 `get_productivity_stats` - Get productivity statistics
+- 🚧 `export_timesheet` - Export timesheet data
 
 #### User Management
-- `get_user_profile` - Get current user profile
-- `update_user_settings` - Update user preferences
+- 🚧 `get_user_profile` - Get current user profile
+- 🚧 `update_user_settings` - Update user preferences
 
-### Resources
+### Resources (✅ = Implemented)
 
 #### Time Entries
-- `resource://time-entries` - Access to time entry data
-- `resource://time-entries/today` - Today's time entries
-- `resource://time-entries/week` - Current week's entries
-- `resource://time-entries/month` - Current month's entries
+- ✅ `early://time-entries/today` - Today's time entries with detailed JSON data
+- ✅ `early://time-entries/week` - Current week's time entries
 
-#### Projects
-- `resource://projects` - Access to all projects
-- `resource://projects/active` - Only active projects
-- `resource://projects/{id}` - Specific project data
-
-#### Reports
-- `resource://reports/summary` - Summary reports
-- `resource://reports/detailed` - Detailed time tracking reports
+#### Activities
+- ✅ `early://activities` - All activities/projects (active + inactive + archived)
+- ✅ `early://activities/active` - Only active activities/projects
 
 ## Configuration
 
-The server will require the following configuration:
+The server requires the following environment variables:
 
-```json
+```bash
+# Required
+EARLY_API_KEY=your-early-api-key
+EARLY_API_SECRET=your-early-api-secret
+
+# Optional (defaults provided)
+EARLY_BASE_URL=https://api.early.app  # Default API base URL
+```
+
+**Authentication**: Uses Early API v4 with API Key + Secret authentication flow.
+
+## Tool Documentation
+
+### ✅ create_time_entry
+
+Create time entries with flexible parameter combinations.
+
+**Parameters:**
+- `projectId` (required) - Activity/Project ID from `list_activities`
+- `description` (required) - Time entry description/note
+- `startTime` (optional) - ISO 8601 timestamp for start time
+- `endTime` (optional) - ISO 8601 timestamp for end time  
+- `duration` (optional) - Duration in minutes
+
+**Parameter Combinations:**
+1. `startTime + endTime` - Creates completed time entry for specific period
+2. `duration` - Creates entry ending now, starting X minutes ago
+3. **Note**: Early API requires both start and end times (no running timers via this endpoint)
+
+**Examples:**
+```javascript
+// Specific time range
 {
-  "apiKey": "your-early-api-key",
-  "baseUrl": "https://api.early.app", // Inferred API base URL
-  "timeout": 30000,
-  "rateLimiting": {
-    "enabled": true,
-    "requestsPerMinute": 100
-  }
+  "projectId": "935607",
+  "description": "Meeting with client",
+  "startTime": "2025-10-14T08:00:00Z",
+  "endTime": "2025-10-14T09:00:00Z"
+}
+
+// Duration-based (ends now)
+{
+  "projectId": "935607", 
+  "description": "Code review",
+  "duration": 45
 }
 ```
+
+**API Behavior:**
+- Automatically replaces entries with identical time slots and activity
+- Timestamp format: Early API expects format without 'Z' suffix internally
+- Returns detailed entry info including formatted local times
 
 ## Installation
 
@@ -122,11 +156,16 @@ npm run lint # Lint code
 
 The server is fully functional with:
 - ✅ MCP protocol implementation
-- ✅ 5 time tracking tools
-- ✅ 4 data resources
-- ✅ Full test suite (24 tests passing)
-- ✅ EARLY API integration
-- ✅ Claude Desktop ready
+- ✅ **6 time tracking tools** (3 fully implemented, 3 planned)
+  - ✅ `create_time_entry` - **Complete with flexible time parameters**
+  - ✅ `edit_time_entry` - Full CRUD operations  
+  - ✅ `get_time_entries` - Date range queries
+  - ✅ `list_activities` - Project/activity management
+- ✅ **4 data resources** - JSON formatted time data access
+- ✅ **Full test suite** (24 tests passing)
+- ✅ **EARLY API v4 integration** with proper authentication
+- ✅ **Claude Desktop ready**
+- ✅ **Production tested** with real time entries
 
 ## Error Handling
 

@@ -56,8 +56,8 @@ describe('EarlyMcpServer Configuration', () => {
       const resourceUris = [
         'early://time-entries/today',
         'early://time-entries/week', 
-        'early://projects',
-        'early://projects/active'
+        'early://activities',
+        'early://activities/active'
       ];
 
       resourceUris.forEach(uri => {
