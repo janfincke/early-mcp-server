@@ -1,6 +1,6 @@
 # EARLY App MCP Server
 
-A Model Context Protocol (MCP) server that provides access to the EARLY app time tracking API.
+An unofficial Model Context Protocol (MCP) server that provides access to the EARLY app time tracking public API.
 
 ## Overview
 
@@ -8,48 +8,54 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 ## API Documentation
 
-- **Base URL**: https://developers.early.app/
-- **Documentation**: Postman Collection
-- **Authentication**: API Key (assumed)
+-   **Base URL**: https://developers.early.app/
+-   **Documentation**: Postman Collection
+-   **Authentication**: API Key (assumed)
 
 ## MCP Implementation
 
 ### Tools (✅ = Implemented, 🚧 = Planned)
 
 #### Time Entry Management
-- ✅ `create_time_entry` - Create a new time entry with flexible time parameters
-- ✅ `edit_time_entry` - Edit an existing time entry
-- ✅ `get_time_entries` - Get time entries for a date range
-- 🚧 `delete_time_entry` - Delete a time entry
-- 🚧 `start_timer` - Start tracking time for a project  
-- 🚧 `stop_timer` - Stop the currently running timer
-- 🚧 `get_active_timer` - Get currently running timer information
+
+-   ✅ `create_time_entry` - Create a new time entry with flexible time parameters
+-   ✅ `edit_time_entry` - Edit an existing time entry
+-   ✅ `get_time_entries` - Get time entries for a date range
+-   🚧 `delete_time_entry` - Delete a time entry
+-   🚧 `start_timer` - Start tracking time for a project
+-   🚧 `stop_timer` - Stop the currently running timer
+-   🚧 `get_active_timer` - Get currently running timer information
 
 #### Project Management
-- ✅ `list_activities` - Get all activities (projects)
-- 🚧 `create_project` - Create a new project
-- 🚧 `update_project` - Update project details
-- 🚧 `delete_project` - Delete a project
-- 🚧 `get_project` - Get specific project details
+
+-   ✅ `list_activities` - Get all activities (projects)
+-   🚧 `create_project` - Create a new project
+-   🚧 `update_project` - Update project details
+-   🚧 `delete_project` - Delete a project
+-   🚧 `get_project` - Get specific project details
 
 #### Reporting and Analytics
-- 🚧 `generate_time_report` - Generate time reports for specified periods
-- 🚧 `get_productivity_stats` - Get productivity statistics
-- 🚧 `export_timesheet` - Export timesheet data
+
+-   🚧 `generate_time_report` - Generate time reports for specified periods
+-   🚧 `get_productivity_stats` - Get productivity statistics
+-   🚧 `export_timesheet` - Export timesheet data
 
 #### User Management
-- 🚧 `get_user_profile` - Get current user profile
-- 🚧 `update_user_settings` - Update user preferences
+
+-   🚧 `get_user_profile` - Get current user profile
+-   🚧 `update_user_settings` - Update user preferences
 
 ### Resources (✅ = Implemented)
 
 #### Time Entries
-- ✅ `early://time-entries/today` - Today's time entries with detailed JSON data
-- ✅ `early://time-entries/week` - Current week's time entries
+
+-   ✅ `early://time-entries/today` - Today's time entries with detailed JSON data
+-   ✅ `early://time-entries/week` - Current week's time entries
 
 #### Activities
-- ✅ `early://activities` - All activities/projects (active + inactive + archived)
-- ✅ `early://activities/active` - Only active activities/projects
+
+-   ✅ `early://activities` - All activities/projects (active + inactive + archived)
+-   ✅ `early://activities/active` - Only active activities/projects
 
 ## Configuration
 
@@ -73,18 +79,21 @@ EARLY_BASE_URL=https://api.early.app  # Default API base URL
 Create time entries with flexible parameter combinations.
 
 **Parameters:**
-- `projectId` (required) - Activity/Project ID from `list_activities`
-- `description` (required) - Time entry description/note
-- `startTime` (optional) - ISO 8601 timestamp for start time
-- `endTime` (optional) - ISO 8601 timestamp for end time  
-- `duration` (optional) - Duration in minutes
+
+-   `projectId` (required) - Activity/Project ID from `list_activities`
+-   `description` (required) - Time entry description/note
+-   `startTime` (optional) - ISO 8601 timestamp for start time
+-   `endTime` (optional) - ISO 8601 timestamp for end time
+-   `duration` (optional) - Duration in minutes
 
 **Parameter Combinations:**
+
 1. `startTime + endTime` - Creates completed time entry for specific period
 2. `duration` - Creates entry ending now, starting X minutes ago
 3. **Note**: Early API requires both start and end times (no running timers via this endpoint)
 
 **Examples:**
+
 ```javascript
 // Specific time range
 {
@@ -96,16 +105,17 @@ Create time entries with flexible parameter combinations.
 
 // Duration-based (ends now)
 {
-  "projectId": "935607", 
+  "projectId": "935607",
   "description": "Code review",
   "duration": 45
 }
 ```
 
 **API Behavior:**
-- Automatically replaces entries with identical time slots and activity
-- Timestamp format: Early API expects format without 'Z' suffix internally
-- Returns detailed entry info including formatted local times
+
+-   Automatically replaces entries with identical time slots and activity
+-   Timestamp format: Early API expects format without 'Z' suffix internally
+-   Returns detailed entry info including formatted local times
 
 ## Installation
 
@@ -130,64 +140,68 @@ npm run lint # Lint code
    Copy `.env.example` to `.env` and add your EARLY API key
 
 2. **Test the server:**
-   ```bash
-   npm run start:env
-   ```
+
+    ```bash
+    npm run start:env
+    ```
 
 3. **Run the test client:**
-   ```bash
-   node test-client.js
-   ```
+
+    ```bash
+    node test-client.js
+    ```
 
 4. **Run unit tests:**
-   ```bash
-   npm test
-   ```
+    ```bash
+    npm test
+    ```
 
 ### 📖 Complete Usage Guide
 
 **See [USAGE.md](./USAGE.md) for detailed information on:**
-- Server setup and configuration
-- Available tools and resources  
-- Claude Desktop integration
-- Troubleshooting and development
+
+-   Server setup and configuration
+-   Available tools and resources
+-   Claude Desktop integration
+-   Troubleshooting and development
 
 ### Status: ✅ Working MCP Server
 
 The server is fully functional with:
-- ✅ MCP protocol implementation
-- ✅ **6 time tracking tools** (3 fully implemented, 3 planned)
-  - ✅ `create_time_entry` - **Complete with flexible time parameters**
-  - ✅ `edit_time_entry` - Full CRUD operations  
-  - ✅ `get_time_entries` - Date range queries
-  - ✅ `list_activities` - Project/activity management
-- ✅ **4 data resources** - JSON formatted time data access
-- ✅ **Full test suite** (24 tests passing)
-- ✅ **EARLY API v4 integration** with proper authentication
-- ✅ **Claude Desktop ready**
-- ✅ **Production tested** with real time entries
+
+-   ✅ MCP protocol implementation
+-   ✅ **6 time tracking tools** (3 fully implemented, 3 planned)
+    -   ✅ `create_time_entry` - **Complete with flexible time parameters**
+    -   ✅ `edit_time_entry` - Full CRUD operations
+    -   ✅ `get_time_entries` - Date range queries
+    -   ✅ `list_activities` - Project/activity management
+-   ✅ **4 data resources** - JSON formatted time data access
+-   ✅ **Full test suite** (24 tests passing)
+-   ✅ **EARLY API v4 integration** with proper authentication
+-   ✅ **Claude Desktop ready**
+-   ✅ **Production tested** with real time entries
 
 ## Error Handling
 
-- API rate limiting compliance
-- Proper error messages for failed operations
-- Graceful handling of network issues
-- Validation of time entry data
+-   API rate limiting compliance
+-   Proper error messages for failed operations
+-   Graceful handling of network issues
+-   Validation of time entry data
 
 ## Security Considerations
 
-- Secure API key storage
-- Input validation and sanitization
-- Proper error messages without exposing sensitive data
-- Rate limiting to prevent abuse
+-   Secure API key storage
+-   Input validation and sanitization
+-   Proper error messages without exposing sensitive data
+-   Rate limiting to prevent abuse
 
 ## Future Enhancements
 
-- Real-time timer synchronization
-- Webhook support for live updates
-- Advanced filtering and search capabilities
-- Integration with calendar applications
-- Bulk operations support
+-   Real-time timer synchronization
+-   Webhook support for live updates
+-   Advanced filtering and search capabilities
+-   Integration with calendar applications
+-   Bulk operations support
 
 ## Contributing
 
