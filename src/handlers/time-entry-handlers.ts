@@ -14,7 +14,7 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
     const { projectId, description, startTime, endTime, duration } = args;
     
     if (!projectId) {
-      throw new Error('Project ID is required');
+      throw new Error('Activity ID is required');
     }
     
     if (!description) {

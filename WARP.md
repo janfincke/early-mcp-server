@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-This is a **Model Context Protocol (MCP) server** for the EARLY app time tracking API. The server provides AI assistants with structured access to time tracking operations, project management, and reporting through the MCP specification.
+This is a **Model Context Protocol (MCP) server** for the EARLY app time tracking API. The server provides AI assistants with structured access to time tracking operations, activity management, and reporting through the MCP specification.
 
 **Key Technology Stack:**
 - TypeScript with ES modules (target: ES2022)
@@ -17,22 +17,22 @@ This is a **Model Context Protocol (MCP) server** for the EARLY app time trackin
 ### MCP Server Structure (`src/index.ts`)
 The main server class `EarlyMcpServer` implements the MCP protocol with:
 - **Tools**: Interactive operations (create_time_entry, start_timer, stop_timer, list_activities, get_time_entries, edit_time_entry)
-- **Resources**: Read-only data access (today's entries, week entries, projects)
+- **Resources**: Read-only data access (today's entries, week entries, activities)
 - **Request Handlers**: MCP protocol compliance with proper error handling
 
 ### API Client (`src/early-api-client.ts`)
 Complete HTTP client for EARLY API with:
-- Full CRUD operations for time entries and projects  
+- Full CRUD operations for time entries and activities  
 - Timer management (start/stop/active status)
 - User profile and settings management
 - Report generation
 - Proper error handling with axios interceptors
-- Helper methods for common queries (today, this week, active projects)
+- Helper methods for common queries (today, this week, active activities)
 
 ### Type System (`src/types.ts`)
 Comprehensive TypeScript definitions covering:
 - API request/response models
-- Time tracking entities (TimeEntry, Project, User, ActiveTimer)
+- Time tracking entities (TimeEntry, Activity, User, ActiveTimer)
 - Query and pagination interfaces
 - Configuration and error types
 
@@ -48,7 +48,7 @@ npm run start:env    # Run with environment setup (via start.js)
 # Code quality
 npm run lint         # Run ESLint on src/**/*.ts
 npm run lint:fix     # Fix ESLint issues automatically
-npm test             # Run Jest tests (currently no tests implemented)
+npm test             # Run Jest tests (24 tests passing)
 ```
 
 ## Configuration
@@ -70,19 +70,23 @@ Copy `.env.example` to `.env` and configure your API credentials.
 - MCP server framework and protocol handling
 - Complete TypeScript type system
 - Full API client implementation with all EARLY API endpoints
-- Error handling and logging infrastructure
-- **Tools Implemented**: `list_activities`, `get_time_entries`, `edit_time_entry`
+- Error handling and logging infrastructure with dedicated `error-utils.ts`
+- **All 6 Tools Implemented**: `list_activities`, `get_time_entries`, `edit_time_entry`, `create_time_entry`, `start_timer`, `stop_timer`
 - **Resource Handlers**: All implemented with proper API client calls and error handling
 - **Utility Functions**: Time formatting and date handling utilities (`src/utils.ts`)
+- **Modular Handler Architecture**: Separate handler files in `src/handlers/` directory
+- **Type System**: Tool argument types in `tool-types.ts`
+- **Test Suite**: 4 test files with 24 passing tests
+- **Jest Configuration**: Complete setup with ts-jest
 
-**🚧 In Progress (TODO markers in code):**
-- **Tools Still Placeholder**: `create_time_entry`, `start_timer`, `stop_timer`
-- These handlers need actual API client calls to replace placeholder responses
+**⚠️ Known Issues:**
+- Jest worker circular JSON structure warnings (tests still pass)
+- Timer functionality test suite has worker process exceptions
 
-**❌ Not Yet Started:**
-- Test files (tests/ directory is empty)
-- Jest configuration file
+**🚧 Planned Enhancements:**
 - ESLint configuration file
+- Additional error handling improvements
+- More comprehensive test coverage
 
 ## Key Development Notes
 
@@ -113,11 +117,13 @@ The `EarlyApiClient` class follows a consistent pattern:
 - **`list_activities`**: Gets all or active activities with proper error handling and debug info
 - **`get_time_entries`**: Supports date ranges or defaults to today's entries
 - **`edit_time_entry`**: Updates existing time entries with flexible field updates
+- **`create_time_entry`**: Create new time entries with flexible time parameters
+- **`start_timer`**: Start time tracking with real API integration
+- **`stop_timer`**: Stop active timer with proper error handling
 
-### 🚧 Placeholder Tools (Need Implementation)
-- **`create_time_entry`**: Create new time entries
-- **`start_timer`**: Start time tracking
-- **`stop_timer`**: Stop active timer
+### 🚧 Future Enhancement Opportunities
+- **`delete_time_entry`**: Delete time entries (API endpoint available)
+- **`get_active_timer`**: Get currently running timer info
 
 ## Integration Points
 

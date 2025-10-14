@@ -21,18 +21,18 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 -   ✅ `create_time_entry` - Create a new time entry with flexible time parameters
 -   ✅ `edit_time_entry` - Edit an existing time entry
 -   ✅ `get_time_entries` - Get time entries for a date range
+-   ✅ `start_timer` - Start tracking time for a project
+-   ✅ `stop_timer` - Stop the currently running timer
 -   🚧 `delete_time_entry` - Delete a time entry
--   🚧 `start_timer` - Start tracking time for a project
--   🚧 `stop_timer` - Stop the currently running timer
 -   🚧 `get_active_timer` - Get currently running timer information
 
-#### Project Management
+#### Activity Management
 
--   ✅ `list_activities` - Get all activities (projects)
--   🚧 `create_project` - Create a new project
--   🚧 `update_project` - Update project details
--   🚧 `delete_project` - Delete a project
--   🚧 `get_project` - Get specific project details
+-   ✅ `list_activities` - Get all activities
+-   🚧 `create_activity` - Create a new activity
+-   🚧 `update_activity` - Update activity details
+-   🚧 `delete_activity` - Delete an activity
+-   🚧 `get_activity` - Get specific activity details
 
 #### Reporting and Analytics
 
@@ -54,8 +54,8 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 #### Activities
 
--   ✅ `early://activities` - All activities/projects (active + inactive + archived)
--   ✅ `early://activities/active` - Only active activities/projects
+-   ✅ `early://activities` - All activities (active + inactive + archived)
+-   ✅ `early://activities/active` - Only active activities
 
 ## Configuration
 
@@ -80,7 +80,7 @@ Create time entries with flexible parameter combinations.
 
 **Parameters:**
 
--   `projectId` (required) - Activity/Project ID from `list_activities`
+-   `projectId` (required) - Activity ID from `list_activities`
 -   `description` (required) - Time entry description/note
 -   `startTime` (optional) - ISO 8601 timestamp for start time
 -   `endTime` (optional) - ISO 8601 timestamp for end time
@@ -170,13 +170,15 @@ npm run lint # Lint code
 The server is fully functional with:
 
 -   ✅ MCP protocol implementation
--   ✅ **6 time tracking tools** (3 fully implemented, 3 planned)
+-   ✅ **6 time tracking tools** (5 fully implemented, 1 planned)
     -   ✅ `create_time_entry` - **Complete with flexible time parameters**
     -   ✅ `edit_time_entry` - Full CRUD operations
     -   ✅ `get_time_entries` - Date range queries
-    -   ✅ `list_activities` - Project/activity management
+    -   ✅ `list_activities` - Activity management
+    -   ✅ `start_timer` - Timer start functionality
+    -   ✅ `stop_timer` - Timer stop functionality
 -   ✅ **4 data resources** - JSON formatted time data access
--   ✅ **Full test suite** (24 tests passing)
+-   ✅ **Full test suite** (24 tests passing with minor Jest worker issues)
 -   ✅ **EARLY API v4 integration** with proper authentication
 -   ✅ **Claude Desktop ready**
 -   ✅ **Production tested** with real time entries

@@ -76,7 +76,7 @@ class EarlyMcpServer {
             inputSchema: {
               type: 'object',
               properties: {
-                projectId: { type: 'string', description: 'Project ID' },
+                projectId: { type: 'string', description: 'Activity ID' },
                 description: { type: 'string', description: 'Time entry description' },
                 startTime: { type: 'string', description: 'Start time (ISO 8601)' },
                 endTime: { type: 'string', description: 'End time (ISO 8601)' },
@@ -91,17 +91,17 @@ class EarlyMcpServer {
             inputSchema: {
               type: 'object',
               properties: {
-                active: { type: 'boolean', description: 'Filter active projects only' },
+                active: { type: 'boolean', description: 'Filter active activities only' },
               },
             },
           },
           {
             name: 'start_timer',
-            description: 'Start tracking time for a project',
+            description: 'Start tracking time for an activity',
             inputSchema: {
               type: 'object',
               properties: {
-                projectId: { type: 'string', description: 'Project ID' },
+                projectId: { type: 'string', description: 'Activity ID' },
                 description: { type: 'string', description: 'Task description' },
               },
               required: ['projectId'],
@@ -123,7 +123,7 @@ class EarlyMcpServer {
               properties: {
                 startDate: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
                 endDate: { type: 'string', description: 'End date (YYYY-MM-DD)' },
-                projectId: { type: 'string', description: 'Filter by project ID' },
+                projectId: { type: 'string', description: 'Filter by activity ID' },
               },
             },
           },

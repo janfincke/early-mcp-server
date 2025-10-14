@@ -82,6 +82,8 @@ Then send JSON-RPC messages:
 npm test
 ```
 
+**Test Status:** 24 tests passing across 4 test files. Note: There are some Jest worker process warnings related to circular JSON structures, but these don't affect test execution or results.
+
 ## 🛠️ Available Tools
 
 The server provides these tools for time tracking:
@@ -104,7 +106,7 @@ Get all activities from EARLY using live API
 Create a new time entry using live API with flexible parameter combinations
 
 **Required Parameters:**
-- `projectId` - Activity/Project ID (get from `list_activities`)
+- `projectId` - Activity ID (get from `list_activities`)
 - `description` - Time entry description/note
 
 **Time Parameters (choose one):**
@@ -139,9 +141,9 @@ Create a new time entry using live API with flexible parameter combinations
 - Duplicate time entries for same activity/timeframe will be replaced
 - Returns detailed entry info with local time formatting
 
-### 3. `start_timer` 🚧 Planned
+### 3. `start_timer` ✅ Fully Implemented
 
-Start tracking time (API integration planned - use `create_time_entry` for completed entries)
+Start tracking time for an activity using live API
 
 ```json
 {
@@ -153,9 +155,9 @@ Start tracking time (API integration planned - use `create_time_entry` for compl
 }
 ```
 
-### 4. `stop_timer` 🚧 Planned
+### 4. `stop_timer` ✅ Fully Implemented
 
-Stop the current timer (API integration planned - use `create_time_entry` for completed entries)
+Stop the currently running timer using live API
 
 ```json
 {
@@ -208,11 +210,11 @@ This week's time entries from EARLY API
 
 ### 3. `early://activities` ✅ Live API
 
-All projects (activities) from EARLY API
+All activities from EARLY API
 
 ### 4. `early://activities/active` ✅ Live API
 
-Active projects only from EARLY API
+Active activities only from EARLY API
 
 ## 🔗 Integration with MCP Clients
 
@@ -309,11 +311,24 @@ early-app-mcp-server/
 ├── src/                    # TypeScript source
 │   ├── index.ts           # Main server
 │   ├── early-api-client.ts # EARLY API client
-│   └── types.ts           # Type definitions
+│   ├── types.ts           # Type definitions
+│   ├── tool-types.ts      # Tool argument types
+│   ├── error-utils.ts     # Error handling utilities
+│   ├── utils.ts           # Helper functions
+│   └── handlers/          # Tool handler implementations
+│       ├── activity-handlers.ts      # Activity operations
+│       ├── time-entry-handlers.ts    # Time entry CRUD operations
+│       ├── tracking-handlers.ts      # Timer start/stop operations
+│       └── resource-handlers.ts      # MCP resource data providers
 ├── dist/                   # Compiled JavaScript
-├── tests/                  # Jest unit tests
+├── tests/                  # Jest unit tests (4 test files, 24 tests passing)
+│   ├── early-api-client-simple.test.ts
+│   ├── early-mcp-server.test.ts
+│   ├── timer-functionality.test.ts
+│   └── types.test.ts
 ├── start.js               # Entry point with env loading
 ├── test-client.js         # MCP test client
+├── jest.config.js         # Jest configuration
 └── .env                   # Environment variables
 ```
 

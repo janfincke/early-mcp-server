@@ -9,7 +9,7 @@ export async function handleStartTimer(apiClient: EarlyApiClient, args: StartTim
     const { projectId, description } = args;
     
     if (!projectId) {
-      throw new Error('Project ID is required to start timer');
+      throw new Error('Activity ID is required to start timer');
     }
     
     const newTracking = await apiClient.startTracking(projectId, description);
@@ -50,7 +50,7 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
         content: [
           {
             type: 'text',
-            text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for a project.`,
+            text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for an activity.`,
           },
         ],
       };
@@ -61,7 +61,7 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
         content: [
           {
             type: 'text',
-            text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for a project.`,
+            text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for an activity.`,
           },
         ],
       };
