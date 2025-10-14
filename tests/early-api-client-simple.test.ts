@@ -32,9 +32,9 @@ describe('EarlyApiClient', () => {
       expect(typeof client.getTodayTimeEntries).toBe('function');
     });
 
-    it('should have getActiveProjects method', () => {
+    it('should have getActiveActivities method', () => {
       const client = new EarlyApiClient(config);
-      expect(typeof client.getActiveProjects).toBe('function');
+      expect(typeof client.getActiveActivities).toBe('function');
     });
   });
 });
