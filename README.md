@@ -18,7 +18,7 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 ## MCP Implementation
 
-### Tools (✅ = Implemented, 🚧 = Planned)
+### Tools
 
 #### Time Entry Management
 
@@ -33,7 +33,7 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 -   `list_activities` - Get all activities
 
 
-### Resources (✅ = Implemented)
+### Resources
 
 #### Time Entries
 
@@ -45,20 +45,6 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 -   `early://activities` - All activities (active + inactive + archived)
 -   `early://activities/active` - Only active activities
 
-## Configuration
-
-The server requires the following environment variables:
-
-```bash
-# Required
-EARLY_API_KEY=your-early-api-key
-EARLY_API_SECRET=your-early-api-secret
-
-# Optional (defaults provided)
-EARLY_BASE_URL=https://api.early.app  # Default API base URL
-```
-
-**Authentication**: Uses Early API v4 with API Key + Secret authentication flow.
 
 ## Documentation
 
@@ -71,76 +57,6 @@ Comprehensive documentation is available at **[janfincke.github.io/early-mcp-ser
 - **[Integration Guide](https://janfincke.github.io/early-mcp-server/integration/)** - Claude Desktop and MCP client setup
 - **[Troubleshooting](https://janfincke.github.io/early-mcp-server/troubleshooting/)** - Common issues and solutions
 
-## Installation
-
-### Prerequisites
-- Node.js >= 18.0.0
-- npm or yarn package manager
-
-### Setup
-```bash
-npm install
-npm run build
-```
-
-## Development
-
-```bash
-npm run dev  # Watch mode
-npm test     # Run tests
-npm run lint # Lint code
-```
-
-## Usage
-
-### Quick Start
-
-1. **Configure environment variables:**
-   Copy `.env.example` to `.env` and add your EARLY API key
-
-2. **Test the server:**
-
-    ```bash
-    npm run start:env
-    ```
-
-3. **Run the test client:**
-
-    ```bash
-    node test-client.js
-    ```
-
-4. **Run unit tests:**
-    ```bash
-    npm test
-    ```
-
-### 📖 Complete Usage Guide
-
-**See [USAGE.md](./USAGE.md) for detailed information on:**
-
--   Server setup and configuration
--   Available tools and resources
--   Claude Desktop integration
--   Troubleshooting and development
-
-### Status: Production Ready MCP Server
-
-The server is fully functional with:
-
--   MCP protocol implementation
--   **6 time tracking tools** (fully implemented)
-    -   `create_time_entry` - **Complete with flexible time parameters**
-    -   `edit_time_entry` - Full CRUD operations
-    -   `get_time_entries` - Date range queries
-    -   `list_activities` - Activity management
-    -   `start_timer` - Timer start functionality
-    -   `stop_timer` - Timer stop functionality
--   **4 data resources** - JSON formatted time data access
--   **Test suite** (24 tests passing - 1 test suite with API signature issues to be resolved)
--   **EARLY API v4 integration** with proper authentication
--   **Claude Desktop ready**
--   **Production tested** with real time entries
 
 ## Error Handling
 
