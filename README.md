@@ -81,13 +81,6 @@ Comprehensive documentation is available at **[janfincke.github.io/early-mcp-ser
 -   `update_activity` - Update activity details
 -   `delete_activity` - Delete an activity
 
-### Advanced Features
--   Real-time timer synchronization
--   Webhook support for live updates
--   Advanced filtering and search capabilities
--   Integration with calendar applications
--   Bulk operations support
-
 ## Contributing
 
 1. Fork the repository
