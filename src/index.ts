@@ -227,17 +227,128 @@ class EarlyMcpServer {
     });
   }
 
-  // Tool handlers (placeholders for now)
+  // Tool handlers
   private async handleCreateTimeEntry(args: any) {
-    // TODO: Implement with actual API call
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Time entry created (placeholder): ${JSON.stringify(args)}`,
-        },
-      ],
-    };
+    try {
+      // Check if API client is configured
+      if (!process.env['EARLY_API_KEY'] || !process.env['EARLY_API_SECRET']) {
+        throw new Error('API credentials not found in environment variables');
+      }
+
+      const { projectId, description, startTime, endTime, duration } = args;
+      
+      if (!projectId) {
+        throw new Error('Project ID is required');
+      }
+      
+      if (!description) {
+        throw new Error('Description is required');
+      }
+      
+      // Build the request object based on the Early API v4 structure
+      const createRequest: any = {
+        activityId: projectId, // Early API uses 'activityId' not 'projectId'
+        note: {
+          text: description
+        }
+      };
+      
+      // Helper function to format timestamps for Early API (without Z suffix)
+      const formatTimestamp = (dateInput: string | Date): string => {
+        const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+        return date.toISOString().replace('Z', '');
+      };
+      
+      // Handle time parameters - prioritize startTime/endTime over duration
+      if (startTime && endTime) {
+        createRequest.startedAt = formatTimestamp(startTime);
+        createRequest.stoppedAt = formatTimestamp(endTime);
+      } else if (duration) {
+        // If only duration is provided, create entry for current time minus duration
+        const now = new Date();
+        const start = new Date(now.getTime() - (duration * 60 * 1000));
+        createRequest.startedAt = formatTimestamp(start);
+        createRequest.stoppedAt = formatTimestamp(now);
+      } else if (startTime && !endTime) {
+        // If only start time is provided, assume it's still running (no stoppedAt)
+        createRequest.startedAt = formatTimestamp(startTime);
+      } else {
+        // Default to current time if no time parameters provided
+        createRequest.startedAt = formatTimestamp(new Date());
+      }
+      
+      // Create the time entry
+      const newEntry = await this.apiClient.createTimeEntry(createRequest);
+      
+      // Format response for user - handle the API response structure
+      // The API response structure varies, so we need to be flexible
+      const activityName = (newEntry as any).activity?.name || 'Unknown';
+      const entryId = (newEntry as any).id || 'Unknown';
+      const durationInfo = (newEntry as any).duration;
+      
+      let startTimeFormatted = 'Unknown';
+      let endTimeFormatted = 'Still running';
+      let durationText = 'In progress';
+      
+      if (durationInfo) {
+        if (durationInfo.startedAt) {
+          startTimeFormatted = formatLocalTime(durationInfo.startedAt);
+        }
+        if (durationInfo.stoppedAt) {
+          endTimeFormatted = formatLocalTime(durationInfo.stoppedAt);
+          durationText = formatDuration(durationInfo.startedAt, durationInfo.stoppedAt);
+        }
+      } else {
+        // Fallback to using the request data if response doesn't have duration info
+        startTimeFormatted = formatLocalTime(createRequest.startedAt);
+        if (createRequest.stoppedAt) {
+          endTimeFormatted = formatLocalTime(createRequest.stoppedAt);
+          durationText = formatDuration(createRequest.startedAt, createRequest.stoppedAt);
+        }
+      }
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `✅ Time entry created successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${description}\n- Start: ${startTimeFormatted}\n- End: ${endTimeFormatted}\n- Duration: ${durationText}\n- ID: ${entryId}\n\nRaw response: ${JSON.stringify(newEntry, null, 2)}`,
+          },
+        ],
+      };
+    } catch (error) {
+      const hasApiKey = !!process.env['EARLY_API_KEY'];
+      const hasApiSecret = !!process.env['EARLY_API_SECRET'];
+      
+      // Enhanced error reporting
+      let errorMsg = 'Unknown error';
+      let errorDetails = '';
+      
+      if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      
+      // Check if it's an API error with more details
+      if (error && typeof error === 'object') {
+        const apiError = error as any;
+        if (apiError.code) {
+          errorMsg = `API Error ${apiError.code}: ${apiError.message || errorMsg}`;
+        }
+        if (apiError.details) {
+          errorDetails = `\n\nAPI Error Details: ${JSON.stringify(apiError.details, null, 2)}`;
+        }
+        // Also show the full error object for debugging
+        errorDetails += `\n\nFull error object: ${JSON.stringify(error, null, 2)}`;
+      }
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `❌ Failed to create time entry: ${errorMsg}\n\nDebug info:\n- API Key: ${hasApiKey ? 'Present' : 'Missing'}\n- API Secret: ${hasApiSecret ? 'Present' : 'Missing'}\n- Base URL: ${process.env['EARLY_BASE_URL'] || 'not set'}\n\nProvided arguments: ${JSON.stringify(args, null, 2)}${errorDetails}`,
+          },
+        ],
+      };
+    }
   }
 
   private async handleListActivities(args: { active?: boolean } | undefined) {
