@@ -93,7 +93,7 @@ After working for several hours:
 
 **Response:**
 ```
-⏹️ Timer stopped successfully!
+Timer stopped successfully!
 
 Final Summary:
 - Activity: Web Development  
@@ -113,7 +113,7 @@ Stopping a timer that ran for less than 1 minute:
 
 **Response:**
 ```
-⏰ Timer stopped.
+Timer stopped.
 
 Timer must run for at least 1 minute for the tracking to be saved.
 ```
@@ -128,7 +128,7 @@ Attempting to stop when no timer is running:
 
 **Response:**
 ```
-⚠️ No active timer found to stop.
+No active timer found to stop.
 
 There is currently no timer running. Use `start_timer` to begin tracking time for an activity.
 ```
@@ -176,11 +176,11 @@ graph LR
 
 | Scenario | Response Type | Description |
 |----------|---------------|-------------|
-| **Timer stopped successfully** | ✅ Success | Timer ran for sufficient time and time entry was created |
-| **Session too short** | ⏰ Info | Timer stopped but session under 1 minute wasn't saved |
-| **No active timer** | ⚠️ Warning | No timer currently running to stop |
-| **Authentication failed** | ❌ Error | API credentials invalid or expired |
-| **Network error** | ❌ Error | Connection issues with EARLY API |
+| **Timer stopped successfully** | Success | Timer ran for sufficient time and time entry was created |
+| **Session too short** | Info | Timer stopped but session under 1 minute wasn't saved |
+| **No active timer** | Warning | No timer currently running to stop |
+| **Authentication failed** | Error | API credentials invalid or expired |
+| **Network error** | Error | Connection issues with EARLY API |
 
 ### Example Error Responses
 
@@ -189,7 +189,7 @@ graph LR
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: Authentication failed\n\nDebug info:\n- API Key: Missing\n- API Secret: Present\n- Base URL: https://api.early.app"
+    "text": "Operation failed: Authentication failed\n\nDebug info:\n- API Key: Missing\n- API Secret: Present\n- Base URL: https://api.early.app"
   }]
 }
 ```
@@ -199,7 +199,7 @@ graph LR
 {
   "content": [{
     "type": "text",
-    "text": "⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use `start_timer` to begin tracking time for an activity."
+    "text": "No active timer found to stop.\n\nThere is currently no timer running. Use `start_timer` to begin tracking time for an activity."
   }]
 }
 ```

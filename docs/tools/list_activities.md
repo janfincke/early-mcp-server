@@ -186,7 +186,7 @@ Look for the project name in the response and note its ID for use in other tools
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: Authentication failed\n\nDebug info:\n- API Key: Present\n- API Secret: Missing\n- Base URL: https://api.early.app\n\nProvided arguments: {\"active\": true}"
+    "text": "Operation failed: Authentication failed\n\nDebug info:\n- API Key: Present\n- API Secret: Missing\n- Base URL: https://api.early.app\n\nProvided arguments: {\"active\": true}"
   }]
 }
 ```

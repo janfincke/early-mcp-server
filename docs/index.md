@@ -13,11 +13,11 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 **Key Features:**
 
-- ✅ **6 Time Tracking Tools** - Complete CRUD operations for time entries and activities
-- ✅ **4 Data Resources** - Structured access to time data via MCP resources  
-- ✅ **Real-time Timer Management** - Start and stop timers with live API integration
-- ✅ **Production Ready** - Full error handling, authentication, and testing
-- ✅ **Claude Desktop Compatible** - Easy integration with Claude and other MCP clients
+- **6 Time Tracking Tools** - Complete CRUD operations for time entries and activities
+- **4 Data Resources** - Structured access to time data via MCP resources  
+- **Real-time Timer Management** - Start and stop timers with live API integration
+- **Production Ready** - Full error handling, authentication, and testing
+- **Claude Desktop Compatible** - Easy integration with Claude and other MCP clients
 
 ## Quick Links {#quick-links}
 
@@ -59,7 +59,7 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 ## Implementation Status {#status}
 
-### ✅ Production Ready MCP Server
+### Production Ready MCP Server
 
 The server is fully functional with:
 
@@ -73,12 +73,12 @@ The server is fully functional with:
 
 | Tool | Status | Description |
 |------|--------|-------------|
-| [`create_time_entry`](tools/create_time_entry.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Create time entries with flexible time parameters |
-| [`edit_time_entry`](tools/edit_time_entry.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Edit existing time entries |
-| [`get_time_entries`](tools/get_time_entries.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Get time entries for date ranges |
-| [`list_activities`](tools/list_activities.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Get all activities with filtering |
-| [`start_timer`](tools/start_timer.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Start time tracking for activities |
-| [`stop_timer`](tools/stop_timer.md) | <span class="tool-status-implemented">✅ COMPLETE</span> | Stop currently running timer |
+| [`create_time_entry`](tools/create_time_entry.md) | <span class="tool-status-implemented">COMPLETE</span> | Create time entries with flexible time parameters |
+| [`edit_time_entry`](tools/edit_time_entry.md) | <span class="tool-status-implemented">COMPLETE</span> | Edit existing time entries |
+| [`get_time_entries`](tools/get_time_entries.md) | <span class="tool-status-implemented">COMPLETE</span> | Get time entries for date ranges |
+| [`list_activities`](tools/list_activities.md) | <span class="tool-status-implemented">COMPLETE</span> | Get all activities with filtering |
+| [`start_timer`](tools/start_timer.md) | <span class="tool-status-implemented">COMPLETE</span> | Start time tracking for activities |
+| [`stop_timer`](tools/stop_timer.md) | <span class="tool-status-implemented">COMPLETE</span> | Stop currently running timer |
 
 ### Available Resources
 

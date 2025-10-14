@@ -148,7 +148,7 @@ A meeting ran longer than originally logged:
 
 **Response:**
 ```
-✅ Time entry updated successfully:
+Time entry updated successfully:
 
 ID: te_meeting_123
 Updated fields: endTime
@@ -242,7 +242,7 @@ Meeting started 15 minutes late:
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: At least one field must be provided to update\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"timeEntryId\": \"te_123\"}"
+    "text": "Operation failed: At least one field must be provided to update\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"timeEntryId\": \"te_123\"}"
   }]
 }
 ```

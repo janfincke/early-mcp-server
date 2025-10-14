@@ -7,9 +7,9 @@ This guide covers integrating the EARLY MCP Server with various MCP clients, wit
 The EARLY MCP Server works with any MCP-compatible client. The most common integration is with Claude Desktop, but it also works with other MCP clients and custom implementations.
 
 **Supported Clients:**
-- ✅ **Claude Desktop** - Most popular and well-tested
-- ✅ **Custom MCP Clients** - Any client implementing MCP protocol
-- ✅ **Development Clients** - Testing and debugging tools
+- **Claude Desktop** - Most popular and well-tested
+- **Custom MCP Clients** - Any client implementing MCP protocol
+- **Development Clients** - Testing and debugging tools
 
 ## Claude Desktop Integration {#claude-desktop}
 
@@ -379,12 +379,12 @@ For better performance:
 
 ### Credential Management
 
-**✅ Recommended:**
+**Recommended:**
 - Store credentials in `.env` file (not tracked by git)
 - Use environment variables in production
 - Rotate API keys regularly
 
-**❌ Avoid:**
+**Avoid:**
 - Hard-coding credentials in configuration files
 - Committing credentials to version control
 - Sharing configuration files with credentials

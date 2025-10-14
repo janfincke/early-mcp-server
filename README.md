@@ -22,28 +22,28 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 
 #### Time Entry Management
 
--   ✅ `create_time_entry` - Create a new time entry with flexible time parameters
--   ✅ `edit_time_entry` - Edit an existing time entry
--   ✅ `get_time_entries` - Get time entries for a date range
--   ✅ `start_timer` - Start tracking time for a project
--   ✅ `stop_timer` - Stop the currently running timer
+-   `create_time_entry` - Create a new time entry with flexible time parameters
+-   `edit_time_entry` - Edit an existing time entry
+-   `get_time_entries` - Get time entries for a date range
+-   `start_timer` - Start tracking time for a project
+-   `stop_timer` - Stop the currently running timer
 
 #### Activity Management
 
--   ✅ `list_activities` - Get all activities
+-   `list_activities` - Get all activities
 
 
 ### Resources (✅ = Implemented)
 
 #### Time Entries
 
--   ✅ `early://time-entries/today` - Today's time entries with detailed JSON data
--   ✅ `early://time-entries/week` - Current week's time entries
+-   `early://time-entries/today` - Today's time entries with detailed JSON data
+-   `early://time-entries/week` - Current week's time entries
 
 #### Activities
 
--   ✅ `early://activities` - All activities (active + inactive + archived)
--   ✅ `early://activities/active` - Only active activities
+-   `early://activities` - All activities (active + inactive + archived)
+-   `early://activities/active` - Only active activities
 
 ## Configuration
 
@@ -60,9 +60,9 @@ EARLY_BASE_URL=https://api.early.app  # Default API base URL
 
 **Authentication**: Uses Early API v4 with API Key + Secret authentication flow.
 
-## 📖 Documentation
+## Documentation
 
-**[Complete Documentation →](https://janfincke.github.io/early-mcp-server/)**
+**[Complete Documentation](https://janfincke.github.io/early-mcp-server/)**
 
 Comprehensive documentation is available at **[janfincke.github.io/early-mcp-server](https://janfincke.github.io/early-mcp-server/)** including:
 
@@ -124,23 +124,23 @@ npm run lint # Lint code
 -   Claude Desktop integration
 -   Troubleshooting and development
 
-### Status: ✅ Production Ready MCP Server
+### Status: Production Ready MCP Server
 
 The server is fully functional with:
 
--   ✅ MCP protocol implementation
--   ✅ **6 time tracking tools** (fully implemented)
-    -   ✅ `create_time_entry` - **Complete with flexible time parameters**
-    -   ✅ `edit_time_entry` - Full CRUD operations
-    -   ✅ `get_time_entries` - Date range queries
-    -   ✅ `list_activities` - Activity management
-    -   ✅ `start_timer` - Timer start functionality
-    -   ✅ `stop_timer` - Timer stop functionality
--   ✅ **4 data resources** - JSON formatted time data access
--   ✅ **Test suite** (24 tests passing - 1 test suite with API signature issues to be resolved)
--   ✅ **EARLY API v4 integration** with proper authentication
--   ✅ **Claude Desktop ready**
--   ✅ **Production tested** with real time entries
+-   MCP protocol implementation
+-   **6 time tracking tools** (fully implemented)
+    -   `create_time_entry` - **Complete with flexible time parameters**
+    -   `edit_time_entry` - Full CRUD operations
+    -   `get_time_entries` - Date range queries
+    -   `list_activities` - Activity management
+    -   `start_timer` - Timer start functionality
+    -   `stop_timer` - Timer stop functionality
+-   **4 data resources** - JSON formatted time data access
+-   **Test suite** (24 tests passing - 1 test suite with API signature issues to be resolved)
+-   **EARLY API v4 integration** with proper authentication
+-   **Claude Desktop ready**
+-   **Production tested** with real time entries
 
 ## Error Handling
 

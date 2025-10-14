@@ -91,10 +91,10 @@ node test-client.js
 
 Expected output:
 ```
-✅ MCP protocol initialization
-✅ Tool listing  
-✅ Resource listing
-✅ Basic tool execution
+MCP protocol initialization
+Tool listing  
+Resource listing
+Basic tool execution
 ```
 
 ### Method 3: Run Unit Tests
@@ -182,4 +182,4 @@ Now that you have the server running:
 - [ ] Test client runs successfully (`node test-client.js`)
 - [ ] Unit tests pass (`npm test`)
 
-✅ **You're ready to start using the EARLY MCP Server!**
+**You're ready to start using the EARLY MCP Server!**

@@ -165,8 +165,8 @@ npm install
    EARLY_API_SECRET=your-secret-here
    
    # Incorrect formats:
-   # EARLY_API_KEY = your-key-here  ❌ (spaces)
-   # EARLY_API_KEY="your-key-here"  ❌ (quotes)
+   # EARLY_API_KEY = your-key-here  (spaces)
+   # EARLY_API_KEY="your-key-here"  (quotes)
    ```
 
 2. **Check .env location:**
@@ -465,8 +465,8 @@ npm install
    "startTime": "2024-01-15T09:00:00Z"
    
    // Incorrect formats
-   "startTime": "2024-01-15 09:00:00"  // ❌
-   "startTime": "09:00:00"             // ❌
+   "startTime": "2024-01-15 09:00:00"  // wrong
+   "startTime": "09:00:00"             // wrong
    ```
 
 2. **Check required fields:**

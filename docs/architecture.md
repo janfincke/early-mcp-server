@@ -227,7 +227,7 @@ Centralized error handling providing consistent user experience.
 return {
   content: [{
     type: 'text',
-    text: '❌ Operation failed: Authentication failed\n\nDebug info:\n- API Key: Present\n- API Secret: Missing'
+    text: 'Operation failed: Authentication failed\n\nDebug info:\n- API Key: Present\n- API Secret: Missing'
   }]
 };
 ```
@@ -247,7 +247,7 @@ if (apiError.response?.status === 404) {
   return {
     content: [{
       type: 'text',
-      text: '⚠️ Resource not found. The requested item may have been deleted.'
+      text: 'Resource not found. The requested item may have been deleted.'
     }]
   };
 }
@@ -383,7 +383,7 @@ describe('handleCreateTimeEntry', () => {
   it('should create time entry with valid parameters', async () => {
     const mockClient = createMockApiClient();
     const result = await handleCreateTimeEntry(mockClient, validArgs);
-    expect(result.content[0].text).toContain('✅ Time entry created');
+    expect(result.content[0].text).toContain('Time entry created');
   });
 });
 ```

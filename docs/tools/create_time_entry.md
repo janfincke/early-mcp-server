@@ -146,7 +146,7 @@ Log a client meeting that happened earlier:
 
 **Response:**
 ```
-✅ Time entry created successfully!
+Time entry created successfully!
 
 Details:
 - Activity: Client Work
@@ -171,7 +171,7 @@ Log time you just finished working:
 
 **Response:**
 ```
-✅ Time entry created successfully!
+Time entry created successfully!
 
 Details:
 - Activity: Development
@@ -210,7 +210,7 @@ Simple entry for a quick task:
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: Activity not found\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"projectId\": \"invalid_id\", \"description\": \"test\"}"
+    "text": "Operation failed: Activity not found\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"projectId\": \"invalid_id\", \"description\": \"test\"}"
   }]
 }
 ```

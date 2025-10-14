@@ -114,7 +114,7 @@ Begin tracking development time:
 
 **Response:**
 ```
-⏱️ Timer started successfully!
+Timer started successfully!
 
 Details:
 - Activity: Web Development
@@ -137,7 +137,7 @@ Start timer for admin work without description:
 
 **Response:**
 ```
-⏱️ Timer started successfully!
+Timer started successfully!
 
 Details:
 - Activity: Administrative Tasks
@@ -161,7 +161,7 @@ Track time for a client meeting:
 
 **Response:**
 ```
-⏱️ Timer started successfully!
+Timer started successfully!
 
 Details:
 - Activity: Client Consultation
@@ -218,7 +218,7 @@ When switching between tasks:
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: Activity ID is required to start timer\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"description\": \"forgot activity id\"}"
+    "text": "Operation failed: Activity ID is required to start timer\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"description\": \"forgot activity id\"}"
   }]
 }
 ```
@@ -229,7 +229,7 @@ When switching between tasks:
 {
   "content": [{
     "type": "text", 
-    "text": "❌ Operation failed: Activity not found\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"projectId\": \"invalid_id\"}"
+    "text": "Operation failed: Activity not found\n\nDebug info:\n- API Key: Present\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"projectId\": \"invalid_id\"}"
   }]
 }
 ```

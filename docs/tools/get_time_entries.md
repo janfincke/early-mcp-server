@@ -233,7 +233,7 @@ Get recent entries to find IDs for editing:
 {
   "content": [{
     "type": "text",
-    "text": "❌ Operation failed: Authentication failed\n\nDebug info:\n- API Key: Missing\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"startDate\": \"2025-10-14\"}"
+    "text": "Operation failed: Authentication failed\n\nDebug info:\n- API Key: Missing\n- API Secret: Present\n- Base URL: https://api.early.app\n\nProvided arguments: {\"startDate\": \"2025-10-14\"}"
   }]
 }
 ```

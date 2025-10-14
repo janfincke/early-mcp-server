@@ -408,9 +408,9 @@ echo "Testing EARLY MCP Server..."
 node test-client.js > test_results.log 2>&1
 
 if [ $? -eq 0 ]; then
-  echo "✅ Tests passed"
+  echo "Tests passed"
 else
-  echo "❌ Tests failed - check test_results.log"
+  echo "Tests failed - check test_results.log"
   # Send alert notification
 fi
 ```
@@ -464,7 +464,7 @@ export async function handleCustomTool(apiClient: EarlyApiClient, args: CustomAr
     return {
       content: [{
         type: 'text',
-        text: `✅ Custom operation completed: ${JSON.stringify(result)}`
+        text: `Custom operation completed: ${JSON.stringify(result)}`
       }]
     };
   } catch (error) {
