@@ -56,9 +56,8 @@ No installation required! Use npx to run the server:
 npx @janfincke/early-mcp-server
 ```
 
-### Claude Desktop Configuration
+### Configuration (for Claude Desktop and others)
 
-Add this to your Claude Desktop config file (`%APPDATA%\Claude\claude_desktop_config.json` on Windows or `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
@@ -77,7 +76,7 @@ Add this to your Claude Desktop config file (`%APPDATA%\Claude\claude_desktop_co
 }
 ```
 
-Get your API credentials from the EARLY app: **Settings → Developer → API Keys**
+Get your API credentials from the EARLY desktop app: **Settings → Developer → API Keys**
 
 ## Documentation
 
