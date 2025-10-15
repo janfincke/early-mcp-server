@@ -19,6 +19,45 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 - **Production Ready** - Full error handling, authentication, and testing
 - **Claude Desktop Compatible** - Easy integration with Claude and other MCP clients
 
+## Quick Start {#quick-start}
+
+### Installation
+
+No installation required! Use npx to run the server:
+
+```bash
+npx @janfincke/early-mcp-server
+```
+
+### Claude Desktop Configuration
+
+Add this to your Claude Desktop config file:
+
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`  
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "early-time-tracker": {
+      "command": "npx",
+      "args": [
+        "@janfincke/early-mcp-server"
+      ],
+      "env": {
+        "EARLY_API_KEY": "your-early-api-key-here",
+        "EARLY_API_SECRET": "your-early-api-secret-here"
+      }
+    }
+  }
+}
+```
+
+!!! tip "Get API Credentials"
+    Open the EARLY app → **Settings** → **Developer** → **API Keys**
+
+That's it! Restart Claude Desktop and start tracking time with natural language.
+
 ## Quick Links {#quick-links}
 
 <div class="grid cards" markdown>

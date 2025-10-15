@@ -19,9 +19,8 @@ Claude Desktop is the most popular MCP client and provides an excellent experien
 
 Before starting, ensure you have:
 - [Claude Desktop installed](https://claude.ai/download)
-- EARLY MCP Server [installed and configured](getting-started.md)
-- API credentials configured in `.env` file
-- Server successfully tested with `npm run start:env`
+- Node.js >= 18.0.0 installed
+- EARLY API credentials ([Get them from EARLY app settings](getting-started.md#configuration))
 
 ### Configuration Steps
 
@@ -59,53 +58,58 @@ If the file doesn't exist, create it with this basic structure:
 }
 ```
 
-#### 3. Add EARLY MCP Server
+#### 3. Add EARLY MCP Server Configuration
 
-Add your server configuration to the `mcpServers` section:
+Copy and paste this configuration into the `mcpServers` section. **Replace the API credentials with your own:**
 
-```json title="claude_desktop_config.json"
-{
-  "mcpServers": {
-    "early-time-tracker": {
-      "command": "node",
-      "args": [
-        "G:\\path\\to\\your\\early-mcp-server\\start.js"
-      ],
-      "env": {
-        "EARLY_API_KEY": "your-early-api-key-here",
-        "EARLY_API_SECRET": "your-early-api-secret-here"
+=== "npx (Recommended)"
+
+    ```json title="claude_desktop_config.json"
+    {
+      "mcpServers": {
+        "early-time-tracker": {
+          "command": "npx",
+          "args": [
+            "@janfincke/early-mcp-server"
+          ],
+          "env": {
+            "EARLY_API_KEY": "your-early-api-key-here",
+            "EARLY_API_SECRET": "your-early-api-secret-here"
+          }
+        }
       }
     }
-  }
-}
-```
+    ```
 
-!!! warning "Use Absolute Paths"
-    Always use absolute paths in Claude Desktop configuration. Relative paths will not work correctly.
+    !!! success "No Installation Required"
+        With npx, you don't need to clone the repository or specify paths. Just add your API credentials and you're ready!
 
-!!! tip "Windows Path Format"
-    On Windows, use forward slashes (`/`) or escaped backslashes (`\\\\`) in the JSON configuration.
+=== "Local Development"
 
-#### 4. Configure Environment Variables
+    ```json title="claude_desktop_config.json"
+    {
+      "mcpServers": {
+        "early-time-tracker": {
+          "command": "node",
+          "args": [
+            "G:\\path\\to\\your\\early-mcp-server\\start.js"
+          ],
+          "env": {
+            "EARLY_API_KEY": "your-early-api-key-here",
+            "EARLY_API_SECRET": "your-early-api-secret-here"
+          }
+        }
+      }
+    }
+    ```
 
-**Option A: Direct in Configuration (Recommended for testing)**
-```json
-"env": {
-  "EARLY_API_KEY": "your-actual-api-key",
-  "EARLY_API_SECRET": "your-actual-secret"
-}
-```
+    !!! warning "Use Absolute Paths"
+        Always use absolute paths in Claude Desktop configuration. Relative paths will not work correctly.
 
-**Option B: Use .env File (Recommended for production)**
-```json
-"args": [
-  "G:\\path\\to\\your\\early-mcp-server\\start.js"
-]
-```
+    !!! tip "Windows Path Format"
+        On Windows, use forward slashes (`/`) or escaped backslashes (`\\\\`) in the JSON configuration.
 
-The `start.js` file automatically loads from `.env`, so you don't need to expose credentials in the configuration.
-
-#### 5. Restart Claude Desktop
+#### 4. Restart Claude Desktop
 
 After saving the configuration:
 1. **Completely quit** Claude Desktop (File → Exit)
