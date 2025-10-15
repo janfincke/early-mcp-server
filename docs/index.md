@@ -1,9 +1,9 @@
 # EARLY MCP Server
 
+[![npm version](https://img.shields.io/npm/v/@janfincke/early-mcp-server.svg)](https://www.npmjs.com/package/@janfincke/early-mcp-server)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue.svg)](https://github.com/janfincke/early-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
 An unofficial **Model Context Protocol (MCP) server** that provides AI assistants with structured access to the [EARLY app](https://early.app/) time tracking API.
 
