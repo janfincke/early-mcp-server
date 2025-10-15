@@ -61,9 +61,6 @@ Edit `.env` with your credentials:
 # Required - Get these from EARLY app settings
 EARLY_API_KEY=your-early-api-key-here
 EARLY_API_SECRET=your-early-api-secret-here
-
-# Optional - defaults provided
-EARLY_BASE_URL=https://api.early.app
 ```
 
 !!! info "Authentication Method"

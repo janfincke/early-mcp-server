@@ -5,7 +5,6 @@ describe('EarlyMcpServer Configuration', () => {
   beforeEach(() => {
     // Clean up environment variables before each test
     delete process.env['EARLY_API_KEY'];
-    delete process.env['EARLY_BASE_URL'];
   });
 
   describe('Configuration Defaults', () => {
@@ -13,7 +12,7 @@ describe('EarlyMcpServer Configuration', () => {
       const defaultConfig: EarlyConfig = {
         apiKey: process.env['EARLY_API_KEY'] || '',
         apiSecret: process.env['EARLY_API_SECRET'] || '',
-        baseUrl: process.env['EARLY_BASE_URL'] || 'https://api.early.app',
+        baseUrl: 'https://api.early.app',
         timeout: 30000,
       };
 
@@ -26,18 +25,17 @@ describe('EarlyMcpServer Configuration', () => {
     it('should use environment variables when available', () => {
       process.env['EARLY_API_KEY'] = 'test-key';
       process.env['EARLY_API_SECRET'] = 'test-secret';
-      process.env['EARLY_BASE_URL'] = 'https://test.api.com';
 
       const config: EarlyConfig = {
         apiKey: process.env['EARLY_API_KEY'] || '',
         apiSecret: process.env['EARLY_API_SECRET'] || '',
-        baseUrl: process.env['EARLY_BASE_URL'] || 'https://api.early.app',
+        baseUrl: 'https://api.early.app',
         timeout: 30000,
       };
 
       expect(config.apiKey).toBe('test-key');
       expect(config.apiSecret).toBe('test-secret');
-      expect(config.baseUrl).toBe('https://test.api.com');
+      expect(config.baseUrl).toBe('https://api.early.app');
       expect(config.timeout).toBe(30000);
     });
   });

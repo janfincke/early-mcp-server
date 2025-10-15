@@ -87,7 +87,6 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
     return createToolErrorResponse(error, {
       hasApiKey: !!process.env['EARLY_API_KEY'],
       hasApiSecret: !!process.env['EARLY_API_SECRET'],
-      baseUrl: process.env['EARLY_BASE_URL'],
       args
     });
   }
@@ -126,7 +125,6 @@ export async function handleGetTimeEntries(apiClient: EarlyApiClient, args: GetT
     return createToolErrorResponse(error, {
       hasApiKey: !!process.env['EARLY_API_KEY'],
       hasApiSecret: !!process.env['EARLY_API_SECRET'],
-      baseUrl: process.env['EARLY_BASE_URL'],
       args
     });
   }
@@ -178,7 +176,6 @@ export async function handleEditTimeEntry(apiClient: EarlyApiClient, args: EditT
     return createToolErrorResponse(error, {
       hasApiKey: !!process.env['EARLY_API_KEY'],
       hasApiSecret: !!process.env['EARLY_API_SECRET'],
-      baseUrl: process.env['EARLY_BASE_URL'],
       args
     });
   }

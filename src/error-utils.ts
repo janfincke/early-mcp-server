@@ -3,7 +3,6 @@ import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 export interface ErrorContext {
     hasApiKey: boolean;
     hasApiSecret: boolean;
-    baseUrl?: string | undefined;
     args?: any;
 }
 
@@ -71,7 +70,7 @@ export function createToolErrorResponse(error: unknown, context: ErrorContext) {
     const debugInfo = [
         `- API Key: ${context.hasApiKey ? "Present" : "Missing"}`,
         `- API Secret: ${context.hasApiSecret ? "Present" : "Missing"}`,
-        `- Base URL: ${context.baseUrl || "not set"}`,
+        `- Base URL: https://api.early.app`,
     ];
 
     if (context.args) {
@@ -104,7 +103,7 @@ export function createResourceErrorResponse(error: unknown, uri: string) {
                     debug: {
                         hasApiKey,
                         hasApiSecret,
-                        baseUrl: process.env["EARLY_BASE_URL"] || "not set",
+                        baseUrl: "https://api.early.app",
                     },
                 }),
             },

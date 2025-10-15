@@ -73,8 +73,7 @@ Add your server configuration to the `mcpServers` section:
       ],
       "env": {
         "EARLY_API_KEY": "your-early-api-key-here",
-        "EARLY_API_SECRET": "your-early-api-secret-here",
-        "EARLY_BASE_URL": "https://api.early.app"
+        "EARLY_API_SECRET": "your-early-api-secret-here"
       }
     }
   }
@@ -93,8 +92,7 @@ Add your server configuration to the `mcpServers` section:
 ```json
 "env": {
   "EARLY_API_KEY": "your-actual-api-key",
-  "EARLY_API_SECRET": "your-actual-secret",
-  "EARLY_BASE_URL": "https://api.early.app"
+  "EARLY_API_SECRET": "your-actual-secret"
 }
 ```
 
@@ -336,9 +334,6 @@ All environment variables that can be configured:
 # Required
 EARLY_API_KEY=your-api-key-here
 EARLY_API_SECRET=your-api-secret-here
-
-# Optional
-EARLY_BASE_URL=https://api.early.app    # Default API endpoint
 ```
 
 ### Multiple MCP Servers

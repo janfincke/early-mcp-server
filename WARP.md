@@ -57,7 +57,6 @@ The server requires environment variables:
 ```bash
 EARLY_API_KEY=your-early-api-key-here
 EARLY_API_SECRET=your-early-api-secret-here
-EARLY_BASE_URL=https://api.early.app
 ```
 
 **Note**: Both `EARLY_API_KEY` and `EARLY_API_SECRET` are now required for authentication.

@@ -74,7 +74,7 @@ class MockEarlyMcpServer {
       }
       
       const stoppedAt = new Date().toISOString().replace('Z', '');
-      await this.apiClient.stopTracking(currentTracking.id, stoppedAt);
+      await this.apiClient.stopTracking(stoppedAt);
       
       return {
         content: [{
@@ -261,7 +261,7 @@ describe('Timer Functionality', () => {
       });
 
       const stoppedAt = '2024-01-10T12:00:00.000';
-      await apiClient.stopTracking('track-123', stoppedAt);
+      await apiClient.stopTracking(stoppedAt);
 
       expect(requestData.stoppedAt).toBe(stoppedAt);
     });

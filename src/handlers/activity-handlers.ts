@@ -27,7 +27,6 @@ export async function handleListActivities(apiClient: EarlyApiClient, args?: Lis
     return createToolErrorResponse(error, {
       hasApiKey: !!process.env['EARLY_API_KEY'],
       hasApiSecret: !!process.env['EARLY_API_SECRET'],
-      baseUrl: process.env['EARLY_BASE_URL'],
       args
     });
   }

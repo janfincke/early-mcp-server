@@ -207,7 +207,7 @@ export class EarlyApiClient {
 
             // Use fresh axios instance like other tracking methods
             const freshClient = axios.create({ timeout: 30000 });
-            const response = await freshClient.get("https://api.early.app/api/v4/tracking", {
+            const response = await freshClient.get(`${this.client.defaults.baseURL}/api/v4/tracking`, {
                 headers: {
                     Authorization: authHeader,
                     "Content-Type": "application/json",
@@ -252,7 +252,7 @@ export class EarlyApiClient {
         // Try with a completely fresh axios instance to match PowerShell
         const freshClient = axios.create({ timeout: 30000 });
         const response = await freshClient.post(
-            `https://api.early.app/api/v4/tracking/${activityId}/start`,
+            `${this.client.defaults.baseURL}/api/v4/tracking/${activityId}/start`,
             trackingRequest,
             {
                 headers: {
@@ -277,7 +277,7 @@ export class EarlyApiClient {
         // Try using the tracking session ID returned from start
         const freshClient = axios.create({ timeout: 30000 });
         const response = await freshClient.post(
-            `https://api.early.app/api/v4/tracking/stop`,
+            `${this.client.defaults.baseURL}/api/v4/tracking/stop`,
             { stoppedAt },
             {
                 headers: {

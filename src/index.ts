@@ -56,7 +56,7 @@ class EarlyMcpServer {
     const config: EarlyConfig = {
       apiKey: process.env['EARLY_API_KEY'] || '',
       apiSecret: process.env['EARLY_API_SECRET'] || '',
-      baseUrl: process.env['EARLY_BASE_URL'] || 'https://api.early.app',
+      baseUrl: 'https://api.early.app',
       timeout: 30000,
     };
 

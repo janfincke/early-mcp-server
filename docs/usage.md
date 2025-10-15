@@ -471,7 +471,6 @@ export async function handleCustomTool(apiClient: EarlyApiClient, args: CustomAr
     return createToolErrorResponse(error, {
       hasApiKey: !!process.env.EARLY_API_KEY,
       hasApiSecret: !!process.env.EARLY_API_SECRET,
-      baseUrl: process.env.EARLY_BASE_URL,
       args
     });
   }

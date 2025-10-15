@@ -31,7 +31,6 @@ export async function handleStartTimer(apiClient: EarlyApiClient, args: StartTim
         return createToolErrorResponse(error, {
             hasApiKey: !!process.env["EARLY_API_KEY"],
             hasApiSecret: !!process.env["EARLY_API_SECRET"],
-            baseUrl: process.env["EARLY_BASE_URL"],
             args,
         });
     }
@@ -86,7 +85,6 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
         return createToolErrorResponse(error, {
             hasApiKey: !!process.env["EARLY_API_KEY"],
             hasApiSecret: !!process.env["EARLY_API_SECRET"],
-            baseUrl: process.env["EARLY_BASE_URL"],
         });
     }
 }
