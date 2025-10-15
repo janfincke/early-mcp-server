@@ -9,15 +9,8 @@ An unofficial Model Context Protocol (MCP) server that provides access to the EA
 
 ## Overview
 
-EARLY is a time tracking application with a comprehensive public API. This MCP server enables AI assistants to interact with time tracking data, manage projects, and generate reports through the EARLY API.
+EARLY is a time tracking application with a comprehensive public API. This MCP server enables AI assistants to interact with time tracking data through the public EARLY API.
 
-## API Documentation
-
--   **Base URL**: https://developers.early.app/
--   **Documentation**: Postman Collection
--   **Authentication**: API Key (assumed)
-
-## MCP Implementation
 
 ### Tools
 
@@ -90,20 +83,12 @@ Comprehensive documentation is available at **[janfincke.github.io/early-mcp-ser
 - **[Integration Guide](https://janfincke.github.io/early-mcp-server/integration/)** - Claude Desktop and MCP client setup
 - **[Troubleshooting](https://janfincke.github.io/early-mcp-server/troubleshooting/)** - Common issues and solutions
 
+### EARLY API Documentation
 
-## Error Handling
+-   **Base URL**: https://developers.early.app/
+-   **Documentation**: Postman Collection
+-   **Authentication**: API Key (assumed)
 
--   API rate limiting compliance
--   Proper error messages for failed operations
--   Graceful handling of network issues
--   Validation of time entry data
-
-## Security Considerations
-
--   Secure API key storage
--   Input validation and sanitization
--   Proper error messages without exposing sensitive data
--   Rate limiting to prevent abuse
 
 ## Future Enhancements
 
