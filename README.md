@@ -1,5 +1,6 @@
 # EARLY App MCP Server
 
+[![npm version](https://img.shields.io/npm/v/@janfincke/early-mcp-server.svg)](https://www.npmjs.com/package/@janfincke/early-mcp-server)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://janfincke.github.io/early-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
