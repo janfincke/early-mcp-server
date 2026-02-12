@@ -90,7 +90,7 @@ Copy `.env.example` to `.env` and configure your API credentials.
 ### API Client Pattern
 The `EarlyApiClient` class follows a consistent pattern:
 - All methods are async and return typed responses
-- Uses v4 endpoints for time tracking and v2 endpoints for activity management where necessary
+- Uses v4 endpoints for all operations (time tracking, activities, user)
 - Helper methods for common date-based queries
 - Authentication via API key and secret in request headers
 
