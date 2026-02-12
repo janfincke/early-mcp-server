@@ -281,8 +281,8 @@ export class EarlyApiClient {
 
     async assignActivityToDeviceSide(activityId: string, deviceSide: string): Promise<any> {
         await this.ensureAuthenticated();
-        // Keeping v2 for device-side assignment as it might be specific
-        const response = await this.client.post(`/api/v2/activities/${activityId}/device-side/${deviceSide}`);
+        // Trying v4 endpoint for consistency
+        const response = await this.client.post(`/api/v4/activities/${activityId}/device-side/${deviceSide}`);
         return response.data;
     }
 
