@@ -104,6 +104,8 @@ nav:
     - Stop Timer: tools/stop_timer.md
     - Get Active Timer: tools/get_active_timer.md
     - Update Active Timer: tools/update_active_timer.md
+    - Generate Report: tools/generate_report.md
+    - Get Current User: tools/get_current_user.md
   - Integration: integration.md
   - Architecture: architecture.md
   - Troubleshooting: troubleshooting.md

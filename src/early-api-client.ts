@@ -289,9 +289,9 @@ export class EarlyApiClient {
     // User methods (Note: Early API v4 documentation doesn't show user endpoints)
     async getCurrentUser(): Promise<User> {
         await this.ensureAuthenticated();
-        // Note: User endpoints not documented in Early API v4
-        // This would need to be confirmed with the actual API
-        throw new Error("User endpoints not documented in Early API v4");
+        // Trying /api/v4/users/me endpoint
+        const response = await this.client.get<User>("/api/v4/users/me");
+        return response.data;
     }
 
     async updateUserSettings(_settings: UserSettings): Promise<User> {

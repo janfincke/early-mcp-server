@@ -32,6 +32,11 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 -   `update_activity` - Update an existing activity
 -   `archive_activity` - Archive or delete an activity
 
+#### User & Reports
+
+-   `generate_report` - Generate summary reports for time entries
+-   `get_current_user` - Get current user information
+
 
 ### Resources
 
@@ -95,12 +100,6 @@ Comprehensive documentation is available at **[janfincke.github.io/early-mcp-ser
 -   **Documentation**: Postman Collection
 -   **Authentication**: API Key (assumed)
 
-
-## Future Enhancements
-
-### Planned Tools
--   `generate_report` - Generate summary reports for time entries
--   `get_current_user` - Get current user information
 
 ## Contributing
 
