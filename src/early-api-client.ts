@@ -262,18 +262,18 @@ export class EarlyApiClient {
         throw new Error("Individual activity retrieval not supported by Early API v4");
     }
 
-    async createActivity(_request: any): Promise<any> {
+    async createActivity(request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Note: Activity creation endpoint not documented in Early API v4
-        // This would need to be implemented if the API supports it
-        throw new Error("Activity creation not documented in Early API v4");
+        // Trying v2 endpoint based on archiveActivity pattern
+        const response = await this.client.post("/api/v2/activities", request);
+        return response.data;
     }
 
-    async updateActivity(_id: string, _request: any): Promise<any> {
+    async updateActivity(id: string, request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Note: Activity update endpoint not documented in Early API v4
-        // This would need to be implemented if the API supports it
-        throw new Error("Activity update not documented in Early API v4");
+        // Trying v2 endpoint based on archiveActivity pattern
+        const response = await this.client.put(`/api/v2/activities/${id}`, request);
+        return response.data;
     }
 
     async archiveActivity(id: string): Promise<void> {

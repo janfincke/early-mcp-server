@@ -18,6 +18,10 @@ import {
   TimeEntriesOutputSchema,
   ActivitiesOutputSchema,
   TimerOutputSchema,
+  UpdateActiveTimerInputSchema,
+  CreateActivityInputSchema,
+  UpdateActivityInputSchema,
+  ArchiveActivityInputSchema,
 } from "./schemas.js";
 import {
   CreateTimeEntryArgs,
@@ -26,6 +30,10 @@ import {
   DeleteTimeEntryArgs,
   ListActivitiesArgs,
   StartTimerArgs,
+  UpdateActiveTimerArgs,
+  CreateActivityArgs,
+  UpdateActivityArgs,
+  ArchiveActivityArgs,
 } from "./tool-types.js";
 import {
   handleCreateTimeEntry,
@@ -33,11 +41,17 @@ import {
   handleEditTimeEntry,
   handleDeleteTimeEntry,
 } from "./handlers/time-entry-handlers.js";
-import { handleListActivities } from "./handlers/activity-handlers.js";
+import {
+  handleListActivities,
+  handleCreateActivity,
+  handleUpdateActivity,
+  handleArchiveActivity,
+} from "./handlers/activity-handlers.js";
 import { 
   handleStartTimer, 
   handleStopTimer,
   handleGetActiveTimer,
+  handleUpdateActiveTimer,
 } from "./handlers/tracking-handlers.js";
 import {
   getTimeEntriesToday,
@@ -161,6 +175,57 @@ class EarlyMcpServer {
       }
     );
 
+    // Create Activity
+    this.server.registerTool(
+      "create_activity",
+      {
+        title: "Create Activity",
+        description: "Create a new activity (project)",
+        inputSchema: CreateActivityInputSchema as any,
+        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleCreateActivity(this.apiClient, args as CreateActivityArgs);
+      }
+    );
+
+    // Update Activity
+    this.server.registerTool(
+      "update_activity",
+      {
+        title: "Update Activity",
+        description: "Update an existing activity",
+        inputSchema: UpdateActivityInputSchema as any,
+        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleUpdateActivity(this.apiClient, args as UpdateActivityArgs);
+      }
+    );
+
+    // Archive Activity
+    this.server.registerTool(
+      "archive_activity",
+      {
+        title: "Archive Activity",
+        description: "Archive or delete an activity",
+        inputSchema: ArchiveActivityInputSchema as any,
+        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
+        annotations: {
+          destructiveHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleArchiveActivity(this.apiClient, args as ArchiveActivityArgs);
+      }
+    );
+
     // Start Timer
     this.server.registerTool(
       "start_timer",
@@ -209,6 +274,23 @@ class EarlyMcpServer {
       },
       async () => {
         return handleGetActiveTimer(this.apiClient);
+      }
+    );
+
+    // Update Active Timer
+    this.server.registerTool(
+      "update_active_timer",
+      {
+        title: "Update Active Timer",
+        description: "Update the description of the currently running timer",
+        inputSchema: UpdateActiveTimerInputSchema as any,
+        outputSchema: TimerOutputSchema as any,
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleUpdateActiveTimer(this.apiClient, args as UpdateActiveTimerArgs);
       }
     );
 

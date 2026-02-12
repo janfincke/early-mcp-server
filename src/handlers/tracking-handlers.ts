@@ -1,6 +1,6 @@
 import { EarlyApiClient } from "../early-api-client.js";
 import { checkApiCredentials, createToolErrorResponse } from "../error-utils.js";
-import { StartTimerArgs } from "../tool-types.js";
+import { StartTimerArgs, UpdateActiveTimerArgs } from "../tool-types.js";
 
 export async function handleStartTimer(apiClient: EarlyApiClient, args: StartTimerArgs) {
     try {
@@ -125,6 +125,48 @@ export async function handleGetActiveTimer(apiClient: EarlyApiClient) {
         return createToolErrorResponse(error, {
             hasApiKey: !!process.env["EARLY_API_KEY"],
             hasApiSecret: !!process.env["EARLY_API_SECRET"],
+        });
+    }
+}
+
+export async function handleUpdateActiveTimer(apiClient: EarlyApiClient, args: UpdateActiveTimerArgs) {
+    try {
+        checkApiCredentials();
+
+        const { description } = args;
+
+        const currentTracking = await apiClient.getCurrentTracking();
+
+        if (!currentTracking || !currentTracking.id) {
+            return {
+                content: [
+                    {
+                        type: "text" as const,
+                        text: "No active timer found to update.",
+                    },
+                ],
+            };
+        }
+
+        const updatedTracking = await apiClient.editTracking(currentTracking.id, description);
+
+        const activityName = updatedTracking?.activity?.name || "Unknown";
+        const trackingId = updatedTracking?.id || "Unknown";
+        const note = updatedTracking?.note?.text || description || "No description";
+
+        return {
+            content: [
+                {
+                    type: "text" as const,
+                    text: `✅ Active timer updated successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${note}\n- ID: ${trackingId}`,
+                },
+            ],
+        };
+    } catch (error) {
+        return createToolErrorResponse(error, {
+            hasApiKey: !!process.env["EARLY_API_KEY"],
+            hasApiSecret: !!process.env["EARLY_API_SECRET"],
+            args,
         });
     }
 }

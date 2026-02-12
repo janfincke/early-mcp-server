@@ -70,6 +70,44 @@ export const StopTimerInputSchema = {};
  */
 export const GetActiveTimerInputSchema = {};
 
+/**
+ * Schema for update_active_timer tool
+ */
+export const UpdateActiveTimerInputSchema = {
+  description: z.string().describe('New description/note for the active timer'),
+};
+
+/**
+ * Schema for create_activity tool
+ */
+export const CreateActivityInputSchema = {
+  name: z.string().describe('Name of the new activity/project'),
+  description: z.string().optional().describe('Description of the activity'),
+  color: z.string().optional().describe('Color code for the activity'),
+  clientId: z.string().optional().describe('Client ID to associate with the activity'),
+  billable: z.boolean().optional().describe('Whether the activity is billable'),
+};
+
+/**
+ * Schema for update_activity tool
+ */
+export const UpdateActivityInputSchema = {
+  activityId: z.string().describe('The ID of the activity to update'),
+  name: z.string().optional().describe('New name for the activity'),
+  description: z.string().optional().describe('New description for the activity'),
+  color: z.string().optional().describe('New color code for the activity'),
+  isActive: z.boolean().optional().describe('Set activity as active (true) or inactive (false)'),
+  clientId: z.string().optional().describe('New client ID'),
+  billable: z.boolean().optional().describe('New billable status'),
+};
+
+/**
+ * Schema for archive_activity tool
+ */
+export const ArchiveActivityInputSchema = {
+  activityId: z.string().describe('The ID of the activity to archive/delete'),
+};
+
 // ============================================
 // Output Schemas for Tools
 // ============================================

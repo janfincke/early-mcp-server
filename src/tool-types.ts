@@ -37,6 +37,32 @@ export interface DeleteTimeEntryArgs {
 
 export interface GetActiveTimerArgs {}
 
+export interface UpdateActiveTimerArgs {
+  description: string;
+}
+
+export interface CreateActivityArgs {
+  name: string;
+  description?: string;
+  color?: string;
+  clientId?: string;
+  billable?: boolean;
+}
+
+export interface UpdateActivityArgs {
+  activityId: string;
+  name?: string;
+  description?: string;
+  color?: string;
+  isActive?: boolean;
+  clientId?: string;
+  billable?: boolean;
+}
+
+export interface ArchiveActivityArgs {
+  activityId: string;
+}
+
 // Note: We'll use the MCP SDK's actual response types instead of custom ones
 
 // API Response types from Early API

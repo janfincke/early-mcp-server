@@ -91,6 +91,38 @@ class MockEarlyMcpServer {
       };
     }
   }
+
+  async handleUpdateActiveTimer(args: any) {
+    try {
+      const { description } = args;
+      const currentTracking = await this.apiClient.getCurrentTracking();
+      
+      if (!currentTracking || !currentTracking.id) {
+        return {
+          content: [{
+            type: 'text',
+            text: 'No active timer found to update.',
+          }],
+        };
+      }
+      
+      await this.apiClient.editTracking(currentTracking.id, description);
+      
+      return {
+        content: [{
+          type: 'text',
+          text: `✅ Active timer updated successfully!`,
+        }],
+      };
+    } catch (error) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ Failed to update timer: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        }],
+      };
+    }
+  }
 }
 
 describe('Timer Functionality', () => {
@@ -217,8 +249,44 @@ describe('Timer Functionality', () => {
       });
 
       const result = await mockServer.handleStopTimer();
-
       expect(result.content?.[0]?.text).toContain('Failed to stop timer');
+    });
+  });
+
+  describe('update_active_timer', () => {
+    it('should update an active timer successfully', async () => {
+      // Mock existing active tracking
+      mockAxios.onGet('/api/v4/tracking').reply(200, {
+        id: 'tracking-123',
+        activity: { name: 'Test Project' },
+        duration: { startedAt: '2024-01-10T10:00:00.000' },
+        note: { text: 'Old description' }
+      });
+
+      // Mock successful timer update
+      mockAxios.onPatch('/api/v4/tracking/tracking-123').reply(200, {
+        id: 'tracking-123',
+        activity: { name: 'Test Project' },
+        duration: { startedAt: '2024-01-10T10:00:00.000' },
+        note: { text: 'New description' }
+      });
+
+      const result = await mockServer.handleUpdateActiveTimer({
+        description: 'New description'
+      });
+
+      expect(result.content?.[0]?.text).toContain('Active timer updated successfully!');
+    });
+
+    it('should handle no active timer gracefully', async () => {
+      // Mock no current tracking
+      mockAxios.onGet('/api/v4/tracking').reply(404);
+
+      const result = await mockServer.handleUpdateActiveTimer({
+        description: 'New description'
+      });
+
+      expect(result.content?.[0]?.text).toContain('No active timer found to update');
     });
   });
 
