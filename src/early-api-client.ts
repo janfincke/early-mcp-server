@@ -264,27 +264,24 @@ export class EarlyApiClient {
 
     async createActivity(request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Trying v2 endpoint based on archiveActivity pattern
-        const response = await this.client.post("/api/v2/activities", request);
+        const response = await this.client.post("/api/v4/activities", request);
         return response.data;
     }
 
     async updateActivity(id: string, request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Trying v2 endpoint based on archiveActivity pattern
-        const response = await this.client.put(`/api/v2/activities/${id}`, request);
+        const response = await this.client.patch(`/api/v4/activities/${id}`, request);
         return response.data;
     }
 
     async archiveActivity(id: string): Promise<void> {
         await this.ensureAuthenticated();
-        // Using v2 endpoint as documented in Early API
-        await this.client.delete(`/api/v2/activities/${id}`);
+        await this.client.delete(`/api/v4/activities/${id}`);
     }
 
     async assignActivityToDeviceSide(activityId: string, deviceSide: string): Promise<any> {
         await this.ensureAuthenticated();
-        // Using v2 endpoint as documented in Early API
+        // Keeping v2 for device-side assignment as it might be specific
         const response = await this.client.post(`/api/v2/activities/${activityId}/device-side/${deviceSide}`);
         return response.data;
     }
