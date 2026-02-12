@@ -262,29 +262,26 @@ export class EarlyApiClient {
         throw new Error("Individual activity retrieval not supported by Early API v4");
     }
 
-    async createActivity(_request: any): Promise<any> {
+    async createActivity(request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Note: Activity creation endpoint not documented in Early API v4
-        // This would need to be implemented if the API supports it
-        throw new Error("Activity creation not documented in Early API v4");
+        const response = await this.client.post("/api/v4/activities", request);
+        return response.data;
     }
 
-    async updateActivity(_id: string, _request: any): Promise<any> {
+    async updateActivity(id: string, request: any): Promise<any> {
         await this.ensureAuthenticated();
-        // Note: Activity update endpoint not documented in Early API v4
-        // This would need to be implemented if the API supports it
-        throw new Error("Activity update not documented in Early API v4");
+        const response = await this.client.patch(`/api/v4/activities/${id}`, request);
+        return response.data;
     }
 
     async archiveActivity(id: string): Promise<void> {
         await this.ensureAuthenticated();
-        // Using v2 endpoint as documented in Early API
-        await this.client.delete(`/api/v2/activities/${id}`);
+        await this.client.delete(`/api/v4/activities/${id}`);
     }
 
     async assignActivityToDeviceSide(activityId: string, deviceSide: string): Promise<any> {
         await this.ensureAuthenticated();
-        // Using v2 endpoint as documented in Early API
+        // Keeping v2 for device-side assignment as it might be specific
         const response = await this.client.post(`/api/v2/activities/${activityId}/device-side/${deviceSide}`);
         return response.data;
     }
