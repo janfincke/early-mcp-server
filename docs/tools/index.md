@@ -18,6 +18,8 @@ The EARLY MCP Server provides **12 time tracking and management tools** that ena
 | [`stop_timer`](stop_timer.md) | End time tracking | None | [📖 Details](stop_timer.md) |
 | [`get_active_timer`](get_active_timer.md) | Check running timer | None | [📖 Details](get_active_timer.md) |
 | [`update_active_timer`](update_active_timer.md) | Update running timer | `description` | [📖 Details](update_active_timer.md) |
+| [`generate_report`](generate_report.md) | Generate summary report | `startDate`, `endDate` | [📖 Details](generate_report.md) |
+| [`get_current_user`](get_current_user.md) | Get user info | None | [📖 Details](get_current_user.md) |
 
 ## Tool Categories {#categories}
 
@@ -47,6 +49,11 @@ Work with EARLY activities/projects:
 - **[`create_activity`](create_activity.md)** - Create a new activity (project)
 - **[`update_activity`](update_activity.md)** - Update an existing activity
 - **[`archive_activity`](archive_activity.md)** - Archive or delete an activity
+
+### User & Reports
+
+- **[`generate_report`](generate_report.md)** - Generate a summary report of time entries
+- **[`get_current_user`](get_current_user.md)** - Get information about the currently authenticated user
 
 ## Common Usage Patterns {#patterns}
 

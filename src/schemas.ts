@@ -108,6 +108,20 @@ export const ArchiveActivityInputSchema = {
   activityId: z.string().describe('The ID of the activity to archive/delete'),
 };
 
+/**
+ * Schema for generate_report tool
+ */
+export const GenerateReportInputSchema = {
+  startDate: z.string().describe('Start date in YYYY-MM-DD format'),
+  endDate: z.string().describe('End date in YYYY-MM-DD format'),
+  projectId: z.string().optional().describe('Filter by activity ID (optional)'),
+};
+
+/**
+ * Schema for get_current_user tool
+ */
+export const GetCurrentUserInputSchema = {};
+
 // ============================================
 // Output Schemas for Tools
 // ============================================
@@ -165,4 +179,37 @@ export const TimeEntriesOutputSchema = {
     duration: z.string().optional(),
     description: z.string().optional(),
   })),
+};
+
+/**
+ * Output schema for report generation
+ */
+export const ReportOutputSchema = {
+  success: z.boolean(),
+  period: z.object({
+    startDate: z.string(),
+    endDate: z.string(),
+  }),
+  totalDurationMinutes: z.number(),
+  totalDurationFormatted: z.string(),
+  entriesCount: z.number(),
+  byActivity: z.array(z.object({
+    activityName: z.string(),
+    activityId: z.string().optional(),
+    durationMinutes: z.number(),
+    durationFormatted: z.string(),
+    percentage: z.string(),
+  })),
+};
+
+/**
+ * Output schema for user info
+ */
+export const UserOutputSchema = {
+  success: z.boolean(),
+  id: z.string().optional(),
+  email: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  timezone: z.string().optional(),
 };

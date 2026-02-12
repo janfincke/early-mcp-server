@@ -63,6 +63,14 @@ export interface ArchiveActivityArgs {
   activityId: string;
 }
 
+export interface GenerateReportArgs {
+  startDate: string;
+  endDate: string;
+  projectId?: string;
+}
+
+export interface GetCurrentUserArgs {}
+
 // Note: We'll use the MCP SDK's actual response types instead of custom ones
 
 // API Response types from Early API

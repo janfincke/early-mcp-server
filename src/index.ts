@@ -22,6 +22,10 @@ import {
   CreateActivityInputSchema,
   UpdateActivityInputSchema,
   ArchiveActivityInputSchema,
+  GenerateReportInputSchema,
+  ReportOutputSchema,
+  GetCurrentUserInputSchema,
+  UserOutputSchema,
 } from "./schemas.js";
 import {
   CreateTimeEntryArgs,
@@ -34,6 +38,8 @@ import {
   CreateActivityArgs,
   UpdateActivityArgs,
   ArchiveActivityArgs,
+  GenerateReportArgs,
+  GetCurrentUserArgs,
 } from "./tool-types.js";
 import {
   handleCreateTimeEntry,
@@ -47,6 +53,8 @@ import {
   handleUpdateActivity,
   handleArchiveActivity,
 } from "./handlers/activity-handlers.js";
+import { handleGenerateReport } from "./handlers/report-handlers.js";
+import { handleGetCurrentUser } from "./handlers/user-handlers.js";
 import { 
   handleStartTimer, 
   handleStopTimer,
@@ -223,6 +231,40 @@ class EarlyMcpServer {
       },
       async (args: any) => {
         return handleArchiveActivity(this.apiClient, args as ArchiveActivityArgs);
+      }
+    );
+
+    // Generate Report
+    this.server.registerTool(
+      "generate_report",
+      {
+        title: "Generate Report",
+        description: "Generate a summary report of time entries for a given period",
+        inputSchema: GenerateReportInputSchema as any,
+        outputSchema: ReportOutputSchema as any,
+        annotations: {
+          readOnlyHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleGenerateReport(this.apiClient, args as GenerateReportArgs);
+      }
+    );
+
+    // Get Current User
+    this.server.registerTool(
+      "get_current_user",
+      {
+        title: "Get Current User",
+        description: "Get information about the currently authenticated user",
+        inputSchema: GetCurrentUserInputSchema as any,
+        outputSchema: UserOutputSchema as any,
+        annotations: {
+          readOnlyHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleGetCurrentUser(this.apiClient, args as GetCurrentUserArgs);
       }
     );
 
