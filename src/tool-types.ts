@@ -31,6 +31,12 @@ export interface StartTimerArgs {
   description?: string;
 }
 
+export interface DeleteTimeEntryArgs {
+  timeEntryId: string;
+}
+
+export interface GetActiveTimerArgs {}
+
 // Note: We'll use the MCP SDK's actual response types instead of custom ones
 
 // API Response types from Early API

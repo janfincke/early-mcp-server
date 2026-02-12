@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 
 export interface ErrorContext {
@@ -23,7 +24,7 @@ export function createToolErrorResponse(error: unknown, context: ErrorContext) {
             return {
                 content: [
                     {
-                        type: "text",
+                        type: "text" as const,
                         text: `⚠️ Resource not found. The requested item may have been deleted or doesn't exist.`,
                     },
                 ],
@@ -34,7 +35,7 @@ export function createToolErrorResponse(error: unknown, context: ErrorContext) {
             return {
                 content: [
                     {
-                        type: "text",
+                        type: "text" as const,
                         text: `⚠️ Conflict: The operation cannot be completed due to a conflict with the current state.`,
                     },
                 ],
@@ -45,7 +46,7 @@ export function createToolErrorResponse(error: unknown, context: ErrorContext) {
             return {
                 content: [
                     {
-                        type: "text",
+                        type: "text" as const,
                         text: `⏰ Timer stopped.\n\nTimer must run for at least 1 minute for the tracking to be saved.`,
                     },
                 ],
@@ -124,3 +125,4 @@ export function checkApiCredentials(): void {
         throw new Error("API credentials not found in environment variables");
     }
 }
+

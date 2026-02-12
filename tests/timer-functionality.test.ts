@@ -186,7 +186,7 @@ describe('Timer Functionality', () => {
       });
 
       // Mock successful timer stop
-      mockAxios.onPost('/api/v4/tracking/tracking-123/stop').reply(200, {
+      mockAxios.onPost('/api/v4/tracking/stop').reply(200, {
         id: 'tracking-123',
         activity: { name: 'Test Project' },
         duration: { 
@@ -255,7 +255,7 @@ describe('Timer Functionality', () => {
     it('should stop tracking correctly', async () => {
       let requestData: any;
       
-      mockAxios.onPost('/api/v4/tracking/track-123/stop').reply((config) => {
+      mockAxios.onPost('/api/v4/tracking/stop').reply((config) => {
         requestData = JSON.parse(config.data);
         return [200, { id: 'track-123', stopped: true }];
       });
@@ -290,7 +290,7 @@ describe('Timer Functionality', () => {
         activity: { name: 'Test Project' },
         duration: { startedAt: '2024-01-10T10:00:00.000' }
       });
-      mockAxios.onPost('/api/v4/tracking/tracking-123/stop').replyOnce(200, {
+      mockAxios.onPost('/api/v4/tracking/stop').replyOnce(200, {
         id: 'tracking-123',
         activity: { name: 'Test Project' },
         duration: { 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance } from "axios";
 import {
     EarlyConfig,
@@ -199,24 +200,11 @@ export class EarlyApiClient {
     async getCurrentTracking(): Promise<any | null> {
         await this.ensureAuthenticated();
         try {
-            // Get auth header and check it exists
-            const authHeader = this.client.defaults.headers.common["Authorization"];
-            if (!authHeader) {
-                throw new Error("Authorization header not found");
-            }
-
-            // Use fresh axios instance like other tracking methods
-            const freshClient = axios.create({ timeout: 30000 });
-            const response = await freshClient.get(`${this.client.defaults.baseURL}/api/v4/tracking`, {
-                headers: {
-                    Authorization: authHeader,
-                    "Content-Type": "application/json",
-                },
-            });
+            const response = await this.client.get("/api/v4/tracking");
             return response.data;
         } catch (error) {
             // Return null if no active tracking (404 is expected)
-            if ((error as any).response?.status === 404) {
+            if ((error as any).response?.status === 404 || (error as ApiError).code === "404") {
                 return null;
             }
             throw error;
@@ -243,23 +231,9 @@ export class EarlyApiClient {
             trackingRequest.note = typeof note === "string" ? { text: note } : note;
         }
 
-        // Get auth header and check it exists
-        const authHeader = this.client.defaults.headers.common["Authorization"];
-        if (!authHeader) {
-            throw new Error("Authorization header not found");
-        }
-
-        // Try with a completely fresh axios instance to match PowerShell
-        const freshClient = axios.create({ timeout: 30000 });
-        const response = await freshClient.post(
-            `${this.client.defaults.baseURL}/api/v4/tracking/${activityId}/start`,
-            trackingRequest,
-            {
-                headers: {
-                    Authorization: authHeader,
-                    "Content-Type": "application/json",
-                },
-            }
+        const response = await this.client.post(
+            `/api/v4/tracking/${activityId}/start`,
+            trackingRequest
         );
         return response.data;
     }
@@ -267,24 +241,9 @@ export class EarlyApiClient {
     async stopTracking(stoppedAt: string): Promise<any> {
         await this.ensureAuthenticated();
 
-        // Get auth header and check it exists
-        const authHeader = this.client.defaults.headers.common["Authorization"];
-        if (!authHeader) {
-            throw new Error("Authorization header not found");
-        }
-
-        // Use fresh axios instance like startTracking
-        // Try using the tracking session ID returned from start
-        const freshClient = axios.create({ timeout: 30000 });
-        const response = await freshClient.post(
-            `${this.client.defaults.baseURL}/api/v4/tracking/stop`,
-            { stoppedAt },
-            {
-                headers: {
-                    Authorization: authHeader,
-                    "Content-Type": "application/json",
-                },
-            }
+        const response = await this.client.post(
+            "/api/v4/tracking/stop",
+            { stoppedAt }
         );
         return response.data;
     }
@@ -400,3 +359,4 @@ export class EarlyApiClient {
         return allActivities;
     }
 }
+
