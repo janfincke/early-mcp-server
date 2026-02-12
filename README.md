@@ -19,12 +19,18 @@ EARLY is a time tracking application with a comprehensive public API. This MCP s
 -   `create_time_entry` - Create a new time entry with flexible time parameters
 -   `edit_time_entry` - Edit an existing time entry
 -   `get_time_entries` - Get time entries for a date range
+-   `delete_time_entry` - Delete a time entry by ID
 -   `start_timer` - Start tracking time for a project
 -   `stop_timer` - Stop the currently running timer
+-   `get_active_timer` - Get information about the currently running timer
+-   `update_active_timer` - Update the description of the currently running timer
 
 #### Activity Management
 
 -   `list_activities` - Get all activities
+-   `create_activity` - Create a new activity (project)
+-   `update_activity` - Update an existing activity
+-   `archive_activity` - Archive or delete an activity
 
 
 ### Resources
@@ -93,11 +99,8 @@ Comprehensive documentation is available at **[janfincke.github.io/early-mcp-ser
 ## Future Enhancements
 
 ### Planned Tools
--   `delete_time_entry` - Delete a time entry
--   `get_active_timer` - Get currently running timer information
--   `create_activity` - Create a new activity
--   `update_activity` - Update activity details
--   `delete_activity` - Delete an activity
+-   `generate_report` - Generate summary reports for time entries
+-   `get_current_user` - Get current user information
 
 ## Contributing
 
