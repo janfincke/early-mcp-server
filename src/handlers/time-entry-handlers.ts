@@ -1,11 +1,14 @@
-import { EarlyApiClient } from '../early-api-client.js';
-import { formatLocalTime, formatDuration } from '../utils.js';
-import { checkApiCredentials, createToolErrorResponse } from '../error-utils.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { EarlyApiClient } from "../early-api-client.js";
+import { formatLocalTime, formatDuration } from "../utils.js";
+import { checkApiCredentials, createToolErrorResponse } from "../error-utils.js";
 import {
   CreateTimeEntryArgs,
   GetTimeEntriesArgs,
   EditTimeEntryArgs,
-} from '../tool-types.js';
+  EarlyTimeEntry,
+} from "../tool-types.js";
+import { CreateTimeEntryRequest, UpdateTimeEntryRequest } from "../types.js";
 
 export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: CreateTimeEntryArgs) {
   try {
@@ -14,14 +17,23 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
     const { projectId, description, startTime, endTime, duration } = args;
     
     if (!projectId) {
-      throw new Error('Activity ID is required');
+      throw new Error("Activity ID is required");
     }
     
     if (!description) {
-      throw new Error('Description is required');
+      throw new Error("Description is required");
     }
     
-    const createRequest: any = {
+    interface CreateTimeEntryApiRequest {
+      activityId: string;
+      note: {
+        text: string;
+      };
+      startedAt?: string;
+      stoppedAt?: string;
+    }
+
+    const createRequest: CreateTimeEntryApiRequest = {
       activityId: projectId,
       note: {
         text: description
@@ -29,8 +41,8 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
     };
     
     const formatTimestamp = (dateInput: string | Date): string => {
-      const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-      return date.toISOString().replace('Z', '');
+      const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+      return date.toISOString().replace("Z", "");
     };
     
     // Handle time parameters
@@ -48,16 +60,17 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
       createRequest.startedAt = formatTimestamp(new Date());
     }
     
-    const newEntry = await apiClient.createTimeEntry(createRequest);
+    const newEntry = await apiClient.createTimeEntry(createRequest as unknown as CreateTimeEntryRequest);
     
     // Format response
-    const activityName = (newEntry as any).activity?.name || 'Unknown';
-    const entryId = (newEntry as any).id || 'Unknown';
-    const durationInfo = (newEntry as any).duration;
+    const entry = newEntry as unknown as EarlyTimeEntry;
+    const activityName = entry.activity?.name || "Unknown";
+    const entryId = entry.id || "Unknown";
+    const durationInfo = entry.duration;
     
-    let startTimeFormatted = 'Unknown';
-    let endTimeFormatted = 'Still running';
-    let durationText = 'In progress';
+    let startTimeFormatted = "Unknown";
+    let endTimeFormatted = "Still running";
+    let durationText = "In progress";
     
     if (durationInfo) {
       if (durationInfo.startedAt) {
@@ -68,25 +81,25 @@ export async function handleCreateTimeEntry(apiClient: EarlyApiClient, args: Cre
         durationText = formatDuration(durationInfo.startedAt, durationInfo.stoppedAt);
       }
     } else {
-      startTimeFormatted = formatLocalTime(createRequest.startedAt);
+      startTimeFormatted = formatLocalTime(createRequest.startedAt as string);
       if (createRequest.stoppedAt) {
         endTimeFormatted = formatLocalTime(createRequest.stoppedAt);
-        durationText = formatDuration(createRequest.startedAt, createRequest.stoppedAt);
+        durationText = formatDuration(createRequest.startedAt as string, createRequest.stoppedAt);
       }
     }
     
     return {
       content: [
         {
-          type: 'text',
+          type: "text" as const,
           text: `✅ Time entry created successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${description}\n- Start: ${startTimeFormatted}\n- End: ${endTimeFormatted}\n- Duration: ${durationText}\n- ID: ${entryId}`,
         },
       ],
     };
   } catch (error) {
     return createToolErrorResponse(error, {
-      hasApiKey: !!process.env['EARLY_API_KEY'],
-      hasApiSecret: !!process.env['EARLY_API_SECRET'],
+      hasApiKey: !!process.env["EARLY_API_KEY"],
+      hasApiSecret: !!process.env["EARLY_API_SECRET"],
       args
     });
   }
@@ -99,8 +112,8 @@ export async function handleGetTimeEntries(apiClient: EarlyApiClient, args: GetT
     let entries;
     
     if (args?.startDate && args?.endDate) {
-      const startDateTime = args.startDate + 'T00:00:00.000';
-      const endDateTime = args.endDate + 'T23:59:59.999';
+      const startDateTime = args.startDate + "T00:00:00.000";
+      const endDateTime = args.endDate + "T23:59:59.999";
       const response = await apiClient.getTimeEntriesInRange(startDateTime, endDateTime);
       entries = response.timeEntries || [];
     } else {
@@ -110,21 +123,21 @@ export async function handleGetTimeEntries(apiClient: EarlyApiClient, args: GetT
     return {
       content: [
         {
-          type: 'text',
-          text: `Found ${entries.length} time entries:\n\n${entries.map((entry: any, i: number) => {
-            const activity = entry.activity?.name || 'Unknown';
+          type: "text" as const,
+          text: `Found ${entries.length} time entries:\n\n${entries.map((entry: EarlyTimeEntry, i: number) => {
+            const activity = entry.activity?.name || "Unknown";
             const start = formatLocalTime(entry.duration.startedAt);
-            const end = formatLocalTime(entry.duration.stoppedAt);
-            const duration = formatDuration(entry.duration.startedAt, entry.duration.stoppedAt);
+            const end = entry.duration.stoppedAt ? formatLocalTime(entry.duration.stoppedAt) : "Running";
+            const duration = entry.duration.stoppedAt ? formatDuration(entry.duration.startedAt, entry.duration.stoppedAt) : "Running";
             return `${i + 1}. ${activity}: ${start} - ${end} (${duration})`;
-          }).join('\n')}`,
+          }).join("\n")}`,
         },
       ],
     };
   } catch (error) {
     return createToolErrorResponse(error, {
-      hasApiKey: !!process.env['EARLY_API_KEY'],
-      hasApiSecret: !!process.env['EARLY_API_SECRET'],
+      hasApiKey: !!process.env["EARLY_API_KEY"],
+      hasApiSecret: !!process.env["EARLY_API_SECRET"],
       args
     });
   }
@@ -137,10 +150,19 @@ export async function handleEditTimeEntry(apiClient: EarlyApiClient, args: EditT
     const { timeEntryId, startTime, endTime, activityId, description } = args;
     
     if (!timeEntryId) {
-      throw new Error('Time entry ID is required');
+      throw new Error("Time entry ID is required");
     }
 
-    const updateRequest: any = {};
+    interface UpdateTimeEntryApiRequest {
+      activityId?: string;
+      note?: {
+        text: string;
+      };
+      startedAt?: string;
+      stoppedAt?: string;
+    }
+
+    const updateRequest: UpdateTimeEntryApiRequest = {};
     
     if (startTime) {
       updateRequest.startedAt = startTime;
@@ -159,24 +181,54 @@ export async function handleEditTimeEntry(apiClient: EarlyApiClient, args: EditT
     }
     
     if (Object.keys(updateRequest).length === 0) {
-      throw new Error('At least one field must be provided to update');
+      throw new Error("At least one field must be provided to update");
     }
 
-    const updatedEntry = await apiClient.updateTimeEntry(timeEntryId, updateRequest);
+    const updatedEntry = await apiClient.updateTimeEntry(timeEntryId, updateRequest as unknown as UpdateTimeEntryRequest);
     
     return {
       content: [
         {
-          type: 'text',
-          text: `✅ Time entry updated successfully:\n\nID: ${timeEntryId}\nUpdated fields: ${Object.keys(updateRequest).join(', ')}\n\nEntry details:\n${JSON.stringify(updatedEntry, null, 2)}`,
+          type: "text" as const,
+          text: `✅ Time entry updated successfully:\n\nID: ${timeEntryId}\nUpdated fields: ${Object.keys(updateRequest).join(", ")}\n\nEntry details:\n${JSON.stringify(updatedEntry, null, 2)}`,
         },
       ],
     };
   } catch (error) {
     return createToolErrorResponse(error, {
-      hasApiKey: !!process.env['EARLY_API_KEY'],
-      hasApiSecret: !!process.env['EARLY_API_SECRET'],
+      hasApiKey: !!process.env["EARLY_API_KEY"],
+      hasApiSecret: !!process.env["EARLY_API_SECRET"],
       args
     });
   }
 }
+
+export async function handleDeleteTimeEntry(apiClient: EarlyApiClient, args: { timeEntryId: string }) {
+  try {
+    checkApiCredentials();
+
+    const { timeEntryId } = args;
+    
+    if (!timeEntryId) {
+      throw new Error("Time entry ID is required");
+    }
+
+    await apiClient.deleteTimeEntry(timeEntryId);
+    
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: `✅ Time entry deleted successfully (ID: ${timeEntryId})`,
+        },
+      ],
+    };
+  } catch (error) {
+    return createToolErrorResponse(error, {
+      hasApiKey: !!process.env["EARLY_API_KEY"],
+      hasApiSecret: !!process.env["EARLY_API_SECRET"],
+      args
+    });
+  }
+}
+

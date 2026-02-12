@@ -1,62 +1,68 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { EarlyApiClient } from "./early-api-client.js";
+import { EarlyConfig } from "./types.js";
 import {
-  CallToolRequestSchema,
-  ErrorCode,
-  ListResourcesRequestSchema,
-  ListToolsRequestSchema,
-  McpError,
-  ReadResourceRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
-import { EarlyApiClient } from './early-api-client.js';
-import { EarlyConfig } from './types.js';
-import { throwToolError, throwResourceError } from './error-utils.js';
+  CreateTimeEntryInputSchema,
+  GetTimeEntriesInputSchema,
+  EditTimeEntryInputSchema,
+  DeleteTimeEntryInputSchema,
+  ListActivitiesInputSchema,
+  StartTimerInputSchema,
+  StopTimerInputSchema,
+  GetActiveTimerInputSchema,
+  TimeEntryOutputSchema,
+  TimeEntriesOutputSchema,
+  ActivitiesOutputSchema,
+  TimerOutputSchema,
+} from "./schemas.js";
 import {
   CreateTimeEntryArgs,
   GetTimeEntriesArgs,
   EditTimeEntryArgs,
+  DeleteTimeEntryArgs,
   ListActivitiesArgs,
   StartTimerArgs,
-} from './tool-types.js';
+} from "./tool-types.js";
 import {
   handleCreateTimeEntry,
   handleGetTimeEntries,
   handleEditTimeEntry,
-} from './handlers/time-entry-handlers.js';
-import { handleListActivities } from './handlers/activity-handlers.js';
-import { handleStartTimer, handleStopTimer } from './handlers/tracking-handlers.js';
+  handleDeleteTimeEntry,
+} from "./handlers/time-entry-handlers.js";
+import { handleListActivities } from "./handlers/activity-handlers.js";
+import { 
+  handleStartTimer, 
+  handleStopTimer,
+  handleGetActiveTimer,
+} from "./handlers/tracking-handlers.js";
 import {
   getTimeEntriesToday,
   getTimeEntriesWeek,
   getActivities,
   getActiveActivities,
-} from './handlers/resource-handlers.js';
+} from "./handlers/resource-handlers.js";
 
 class EarlyMcpServer {
-  private server: Server;
+  private server: McpServer;
   private apiClient: EarlyApiClient;
 
   constructor() {
-    this.server = new Server(
+    this.server = new McpServer(
       {
-        name: 'early-app-mcp-server',
-        version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-          resources: {},
-        },
+        name: "early-app-mcp-server",
+        version: "1.0.0",
       }
     );
 
     // Initialize API client with configuration
     const config: EarlyConfig = {
-      apiKey: process.env['EARLY_API_KEY'] || '',
-      apiSecret: process.env['EARLY_API_SECRET'] || '',
-      baseUrl: 'https://api.early.app',
+      apiKey: process.env["EARLY_API_KEY"] || "",
+      apiSecret: process.env["EARLY_API_SECRET"] || "",
+      baseUrl: "https://api.early.app",
       timeout: 30000,
     };
 
@@ -66,221 +72,206 @@ class EarlyMcpServer {
   }
 
   private setupHandlers() {
-    // List available tools
-    this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-      return {
-        tools: [
-          {
-            name: 'create_time_entry',
-            description: 'Create a new time entry',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                projectId: { type: 'string', description: 'Activity ID' },
-                description: { type: 'string', description: 'Time entry description' },
-                startTime: { type: 'string', description: 'Start time (ISO 8601)' },
-                endTime: { type: 'string', description: 'End time (ISO 8601)' },
-                duration: { type: 'number', description: 'Duration in minutes' },
-              },
-              required: ['projectId', 'description'],
-            },
-          },
-          {
-            name: 'list_activities',
-            description: 'Get all activities',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                active: { type: 'boolean', description: 'Filter active activities only' },
-              },
-            },
-          },
-          {
-            name: 'start_timer',
-            description: 'Start tracking time for an activity',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                projectId: { type: 'string', description: 'Activity ID' },
-                description: { type: 'string', description: 'Task description' },
-              },
-              required: ['projectId'],
-            },
-          },
-          {
-            name: 'stop_timer',
-            description: 'Stop the currently running timer',
-            inputSchema: {
-              type: 'object',
-              properties: {},
-            },
-          },
-          {
-            name: 'get_time_entries',
-            description: 'Get time entries for a date range',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                startDate: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
-                endDate: { type: 'string', description: 'End date (YYYY-MM-DD)' },
-                projectId: { type: 'string', description: 'Filter by activity ID' },
-              },
-            },
-          },
-          {
-            name: 'edit_time_entry',
-            description: 'Edit an existing time entry',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                timeEntryId: { type: 'string', description: 'ID of the time entry to edit' },
-                startTime: { type: 'string', description: 'New start time (ISO 8601)' },
-                endTime: { type: 'string', description: 'New end time (ISO 8601)' },
-                activityId: { type: 'string', description: 'New activity ID' },
-                description: { type: 'string', description: 'New description/note' },
-              },
-              required: ['timeEntryId'],
-            },
-          },
-        ],
-      };
-    });
+    // ============================================
+    // Tools
+    // ============================================
 
-    // List available resources
-    this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
-      return {
-        resources: [
-          {
-            uri: 'early://time-entries/today',
-            name: "Today's Time Entries",
-            description: 'Time entries for today',
-            mimeType: 'application/json',
-          },
-          {
-            uri: 'early://time-entries/week',
-            name: 'This Week Time Entries',
-            description: 'Time entries for current week',
-            mimeType: 'application/json',
-          },
-          {
-            uri: 'early://activities',
-            name: 'All Activities',
-            description: 'List of all activities',
-            mimeType: 'application/json',
-          },
-          {
-            uri: 'early://activities/active',
-            name: 'Active Activities',
-            description: 'List of active activities only',
-            mimeType: 'application/json',
-          },
-        ],
-      };
-    });
-
-    // Handle tool calls
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      try {
-        switch (request.params.name) {
-          case 'create_time_entry':
-            return await this.handleCreateTimeEntry(request.params.arguments as unknown as CreateTimeEntryArgs);
-          
-          case 'list_activities':
-            return await this.handleListActivities(request.params.arguments as unknown as ListActivitiesArgs);
-          
-          case 'start_timer':
-            return await this.handleStartTimer(request.params.arguments as unknown as StartTimerArgs);
-          
-          case 'stop_timer':
-            return await this.handleStopTimer();
-          
-          case 'get_time_entries':
-            return await this.handleGetTimeEntries(request.params.arguments as unknown as GetTimeEntriesArgs);
-          
-          case 'edit_time_entry':
-            return await this.handleEditTimeEntry(request.params.arguments as unknown as EditTimeEntryArgs);
-          
-          default:
-            throw new McpError(
-              ErrorCode.MethodNotFound,
-              `Tool not found: ${request.params.name}`
-            );
-        }
-      } catch (error) {
-        throwToolError(request.params.name, error instanceof Error ? error.message : String(error));
+    // Create Time Entry
+    this.server.registerTool(
+      "create_time_entry",
+      {
+        title: "Create Time Entry",
+        description: "Create a new time entry with flexible time parameters",
+        inputSchema: CreateTimeEntryInputSchema as any,
+        outputSchema: TimeEntryOutputSchema as any,
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleCreateTimeEntry(this.apiClient, args as CreateTimeEntryArgs);
       }
-    });
+    );
 
-    // Handle resource reads
-    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-      const { uri } = request.params;
-      
-      try {
-        switch (uri) {
-          case 'early://time-entries/today':
-            return await this.getTimeEntriesToday();
-          
-          case 'early://time-entries/week':
-            return await this.getTimeEntriesWeek();
-          
-          case 'early://activities':
-            return await this.getActivities();
-          
-          case 'early://activities/active':
-            return await this.getActiveActivities();
-          
-          default:
-            throwResourceError(uri);
-        }
-      } catch (error) {
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Resource read failed: ${error instanceof Error ? error.message : String(error)}`
-        );
+    // Get Time Entries
+    this.server.registerTool(
+      "get_time_entries",
+      {
+        title: "Get Time Entries",
+        description: "Get time entries for a date range",
+        inputSchema: GetTimeEntriesInputSchema as any,
+        outputSchema: TimeEntriesOutputSchema as any,
+        annotations: {
+          readOnlyHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleGetTimeEntries(this.apiClient, args as GetTimeEntriesArgs);
       }
-    });
-  }
+    );
 
-  // Tool handlers
-  private async handleCreateTimeEntry(args: CreateTimeEntryArgs) {
-    return handleCreateTimeEntry(this.apiClient, args);
-  }
+    // Edit Time Entry
+    this.server.registerTool(
+      "edit_time_entry",
+      {
+        title: "Edit Time Entry",
+        description: "Edit an existing time entry",
+        inputSchema: EditTimeEntryInputSchema as any,
+        outputSchema: TimeEntryOutputSchema as any,
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleEditTimeEntry(this.apiClient, args as EditTimeEntryArgs);
+      }
+    );
 
-  private async handleListActivities(args?: ListActivitiesArgs) {
-    return handleListActivities(this.apiClient, args);
-  }
+    // Delete Time Entry
+    this.server.registerTool(
+      "delete_time_entry",
+      {
+        title: "Delete Time Entry",
+        description: "Delete a time entry by ID",
+        inputSchema: DeleteTimeEntryInputSchema as any,
+        outputSchema: TimeEntryOutputSchema as any, // Using generic output schema for simplicity
+        annotations: {
+          destructiveHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleDeleteTimeEntry(this.apiClient, args as DeleteTimeEntryArgs);
+      }
+    );
 
-  private async handleStartTimer(args: StartTimerArgs) {
-    return handleStartTimer(this.apiClient, args);
-  }
+    // List Activities
+    this.server.registerTool(
+      "list_activities",
+      {
+        title: "List Activities",
+        description: "Get all activities",
+        inputSchema: ListActivitiesInputSchema as any,
+        outputSchema: ActivitiesOutputSchema as any,
+        annotations: {
+          readOnlyHint: true,
+        },
+      },
+      async (args: any) => {
+        return handleListActivities(this.apiClient, args as ListActivitiesArgs);
+      }
+    );
 
-  private async handleStopTimer() {
-    return handleStopTimer(this.apiClient);
-  }
+    // Start Timer
+    this.server.registerTool(
+      "start_timer",
+      {
+        title: "Start Timer",
+        description: "Start tracking time for an activity",
+        inputSchema: StartTimerInputSchema as any,
+        outputSchema: TimerOutputSchema as any,
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async (args: any) => {
+        return handleStartTimer(this.apiClient, args as StartTimerArgs);
+      }
+    );
 
-  private async handleGetTimeEntries(args: GetTimeEntriesArgs) {
-    return handleGetTimeEntries(this.apiClient, args);
-  }
+    // Stop Timer
+    this.server.registerTool(
+      "stop_timer",
+      {
+        title: "Stop Timer",
+        description: "Stop the currently running timer",
+        inputSchema: StopTimerInputSchema as any,
+        outputSchema: TimerOutputSchema as any,
+        annotations: {
+          destructiveHint: false,
+        },
+      },
+      async () => {
+        return handleStopTimer(this.apiClient);
+      }
+    );
 
-  private async handleEditTimeEntry(args: EditTimeEntryArgs) {
-    return handleEditTimeEntry(this.apiClient, args);
-  }
+    // Get Active Timer
+    this.server.registerTool(
+      "get_active_timer",
+      {
+        title: "Get Active Timer",
+        description: "Get information about the currently running timer",
+        inputSchema: GetActiveTimerInputSchema as any,
+        outputSchema: TimerOutputSchema as any,
+        annotations: {
+          readOnlyHint: true,
+        },
+      },
+      async () => {
+        return handleGetActiveTimer(this.apiClient);
+      }
+    );
 
-  // Resource handlers
-  private async getTimeEntriesToday() {
-    return getTimeEntriesToday(this.apiClient);
-  }
+    // ============================================
+    // Resources
+    // ============================================
 
-  private async getTimeEntriesWeek() {
-    return getTimeEntriesWeek(this.apiClient);
-  }
+    this.server.registerResource(
+      "today_time_entries",
+      "early://time-entries/today",
+      {
+        title: "Today's Time Entries",
+        description: "Time entries for today",
+        mimeType: "application/json",
+      },
+      async () => {
+        const result = await getTimeEntriesToday(this.apiClient);
+        // McpServer resource callback expects ReadResourceResult which has 'contents' array
+        return result;
+      }
+    );
 
-  private async getActivities() {
-    return getActivities(this.apiClient);
-  }
+    this.server.registerResource(
+      "week_time_entries",
+      "early://time-entries/week",
+      {
+        title: "This Week Time Entries",
+        description: "Time entries for current week",
+        mimeType: "application/json",
+      },
+      async () => {
+        const result = await getTimeEntriesWeek(this.apiClient);
+        return result;
+      }
+    );
 
-  private async getActiveActivities() {
-    return getActiveActivities(this.apiClient);
+    this.server.registerResource(
+      "all_activities",
+      "early://activities",
+      {
+        title: "All Activities",
+        description: "List of all activities",
+        mimeType: "application/json",
+      },
+      async () => {
+        const result = await getActivities(this.apiClient);
+        return result;
+      }
+    );
+
+    this.server.registerResource(
+      "active_activities",
+      "early://activities/active",
+      {
+        title: "Active Activities",
+        description: "List of active activities only",
+        mimeType: "application/json",
+      },
+      async () => {
+        const result = await getActiveActivities(this.apiClient);
+        return result;
+      }
+    );
   }
 
   async run() {
@@ -295,3 +286,6 @@ server.run().catch(() => {
   // Error handling removed to prevent stdio interference
   process.exit(1);
 });
+
+
+
