@@ -15,7 +15,6 @@ import {
   StopTimerInputSchema,
   GetActiveTimerInputSchema,
   TimeEntryOutputSchema,
-  TimeEntriesOutputSchema,
   ActivitiesOutputSchema,
   TimerOutputSchema,
   UpdateActiveTimerInputSchema,
@@ -122,7 +121,6 @@ class EarlyMcpServer {
         title: "Get Time Entries",
         description: "Get time entries for a date range",
         inputSchema: GetTimeEntriesInputSchema as any,
-        outputSchema: TimeEntriesOutputSchema as any,
         annotations: {
           readOnlyHint: true,
         },
@@ -173,7 +171,6 @@ class EarlyMcpServer {
         title: "List Activities",
         description: "Get all activities",
         inputSchema: ListActivitiesInputSchema as any,
-        outputSchema: ActivitiesOutputSchema as any,
         annotations: {
           readOnlyHint: true,
         },
@@ -309,7 +306,6 @@ class EarlyMcpServer {
         title: "Get Active Timer",
         description: "Get information about the currently running timer",
         inputSchema: GetActiveTimerInputSchema as any,
-        outputSchema: TimerOutputSchema as any,
         annotations: {
           readOnlyHint: true,
         },

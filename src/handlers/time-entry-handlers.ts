@@ -123,14 +123,23 @@ export async function handleGetTimeEntries(apiClient: EarlyApiClient, args: GetT
     return {
       content: [
         {
-          type: "text" as const,
-          text: `Found ${entries.length} time entries:\n\n${entries.map((entry: EarlyTimeEntry, i: number) => {
-            const activity = entry.activity?.name || "Unknown";
-            const start = formatLocalTime(entry.duration.startedAt);
-            const end = entry.duration.stoppedAt ? formatLocalTime(entry.duration.stoppedAt) : "Running";
-            const duration = entry.duration.stoppedAt ? formatDuration(entry.duration.startedAt, entry.duration.stoppedAt) : "Running";
-            return `${i + 1}. ${activity}: ${start} - ${end} (${duration})`;
-          }).join("\n")}`,
+          type: "resource" as const,
+          resource: {
+            uri: `early://time-entries/${args?.startDate || 'today'}`,
+            mimeType: 'application/json',
+            text: JSON.stringify({
+              success: true,
+              count: entries.length,
+              entries: entries.map((entry: EarlyTimeEntry) => ({
+                id: entry.id,
+                activityName: entry.activity?.name || "Unknown",
+                startTime: entry.duration.startedAt,
+                endTime: entry.duration.stoppedAt || undefined,
+                duration: entry.duration.stoppedAt ? formatDuration(entry.duration.startedAt, entry.duration.stoppedAt) : undefined,
+                description: entry.note?.text || undefined,
+              }))
+            }, null, 2)
+          }
         },
       ],
     };

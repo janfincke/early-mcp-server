@@ -13,15 +13,23 @@ export async function handleListActivities(apiClient: EarlyApiClient, args?: Lis
       await apiClient.getAllActivities();
     
     const activeActivities = activities.filter(a => a);
-    const filter = args?.active ? 'active only' : 'all activities';
     
     return {
       content: [
         {
-          type: 'text' as const,
-          text: `Activities (${filter}): ${activeActivities.length} found\n\n${activeActivities.map((activity: { id: string; name: string }, i: number) => {
-            return `${i + 1}. ${activity.name} (ID: ${activity.id})`;
-          }).join('\n')}`,
+          type: 'resource' as const,
+          resource: {
+            uri: `early://activities/${args?.active ? 'active' : 'all'}`,
+            mimeType: 'application/json',
+            text: JSON.stringify({
+              success: true,
+              count: activeActivities.length,
+              activities: activeActivities.map((activity: { id: string; name: string }) => ({
+                id: activity.id,
+                name: activity.name,
+              }))
+            }, null, 2)
+          }
         },
       ],
     };

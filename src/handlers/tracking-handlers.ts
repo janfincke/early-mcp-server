@@ -99,8 +99,16 @@ export async function handleGetActiveTimer(apiClient: EarlyApiClient) {
             return {
                 content: [
                     {
-                        type: "text" as const,
-                        text: "No active timer is currently running.",
+                        type: "resource" as const,
+                        resource: {
+                            uri: 'early://timer/active',
+                            mimeType: 'application/json',
+                            text: JSON.stringify({
+                                success: true,
+                                isRunning: false,
+                                message: "No active timer is currently running."
+                            }, null, 2)
+                        }
                     },
                 ],
             };
@@ -109,15 +117,24 @@ export async function handleGetActiveTimer(apiClient: EarlyApiClient) {
         const activityName = currentTracking.activity?.name || "Unknown";
         const trackingId = currentTracking.id;
         const note = currentTracking.note?.text || "No description";
-        const startedAt = currentTracking.duration?.startedAt 
-            ? new Date(currentTracking.duration.startedAt).toLocaleTimeString() 
-            : "Unknown";
+        const startedAt = currentTracking.duration?.startedAt || null;
 
         return {
             content: [
                 {
-                    type: "text" as const,
-                    text: `⏱️ Active Timer Running\n\n- Activity: ${activityName}\n- Description: ${note}\n- Started: ${startedAt}\n- ID: ${trackingId}`,
+                    type: "resource" as const,
+                    resource: {
+                        uri: 'early://timer/active',
+                        mimeType: 'application/json',
+                        text: JSON.stringify({
+                            success: true,
+                            isRunning: true,
+                            id: trackingId,
+                            activityName: activityName,
+                            description: note,
+                            startedAt: startedAt
+                        }, null, 2)
+                    }
                 },
             ],
         };
