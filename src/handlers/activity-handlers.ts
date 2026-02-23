@@ -8,25 +8,55 @@ export async function handleListActivities(apiClient: EarlyApiClient, args?: Lis
   try {
     checkApiCredentials();
 
-    const activities = args?.active ? 
-      await apiClient.getActiveActivities() : 
-      await apiClient.getAllActivities();
+    if (args?.active) {
+      const activities = await apiClient.getActiveActivities();
+      const activeActivities = activities.filter(a => a);
+      
+      return {
+        content: [
+          {
+            type: 'resource' as const,
+            resource: {
+              uri: 'early://activities/active',
+              mimeType: 'application/json',
+              text: JSON.stringify({
+                success: true,
+                count: activeActivities.length,
+                activities: activeActivities.map((activity: any) => ({
+                  id: activity.id,
+                  name: activity.name,
+                  status: 'active'
+                }))
+              }, null, 2)
+            }
+          },
+        ],
+      };
+    }
+
+    // Get full response with all activity types
+    const response = await apiClient.getActivities();
     
-    const activeActivities = activities.filter(a => a);
+    const allActivities = [
+      ...((response.activities || []).map((a: any) => ({ ...a, status: 'active' }))),
+      ...((response.inactiveActivities || []).map((a: any) => ({ ...a, status: 'inactive' }))),
+      ...((response.archivedActivities || []).map((a: any) => ({ ...a, status: 'archived' }))),
+    ].filter(a => a);
     
     return {
       content: [
         {
           type: 'resource' as const,
           resource: {
-            uri: `early://activities/${args?.active ? 'active' : 'all'}`,
+            uri: 'early://activities/all',
             mimeType: 'application/json',
             text: JSON.stringify({
               success: true,
-              count: activeActivities.length,
-              activities: activeActivities.map((activity: { id: string; name: string }) => ({
+              count: allActivities.length,
+              activities: allActivities.map((activity: any) => ({
                 id: activity.id,
                 name: activity.name,
+                status: activity.status
               }))
             }, null, 2)
           }

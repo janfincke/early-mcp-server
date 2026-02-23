@@ -16,14 +16,26 @@ export async function handleStartTimer(apiClient: EarlyApiClient, args: StartTim
 
         const activityName = newTracking?.activity?.name || "Unknown";
         const trackingId = newTracking?.id || "Unknown";
-        const startedAt = "Now";
+        const startedAt = newTracking?.duration?.startedAt || new Date().toISOString();
         const note = newTracking?.note?.text || description || "No description";
 
         return {
             content: [
                 {
-                    type: "text" as const,
-                    text: `⏱️ Timer started successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${note}\n- Started: ${startedAt}\n- ID: ${trackingId}\n\nTimer is now running...`,
+                    type: "resource" as const,
+                    resource: {
+                        uri: 'early://timer/started',
+                        mimeType: 'application/json',
+                        text: JSON.stringify({
+                            success: true,
+                            isRunning: true,
+                            id: trackingId,
+                            activityName: activityName,
+                            description: note,
+                            startedAt: startedAt,
+                            message: `Timer started successfully for ${activityName}`
+                        }, null, 2)
+                    }
                 },
             ],
         };
@@ -48,8 +60,16 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
             return {
                 content: [
                     {
-                        type: "text" as const,
-                        text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for an activity.`,
+                        type: "resource" as const,
+                        resource: {
+                            uri: 'early://timer/stopped',
+                            mimeType: 'application/json',
+                            text: JSON.stringify({
+                                success: false,
+                                isRunning: false,
+                                message: "No active timer found to stop"
+                            }, null, 2)
+                        }
                     },
                 ],
             };
@@ -59,8 +79,16 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
             return {
                 content: [
                     {
-                        type: "text" as const,
-                        text: `⚠️ No active timer found to stop.\n\nThere is currently no timer running. Use \`start_timer\` to begin tracking time for an activity.`,
+                        type: "resource" as const,
+                        resource: {
+                            uri: 'early://timer/stopped',
+                            mimeType: 'application/json',
+                            text: JSON.stringify({
+                                success: false,
+                                isRunning: false,
+                                message: "No active timer found to stop"
+                            }, null, 2)
+                        }
                     },
                 ],
             };
@@ -76,8 +104,19 @@ export async function handleStopTimer(apiClient: EarlyApiClient) {
         return {
             content: [
                 {
-                    type: "text" as const,
-                    text: `⏹️ Timer stopped successfully!\n\nFinal Summary:\n- Activity: ${activityName}\n- Description: ${note}\n- ID: ${trackingId}\n\nTime entry has been saved.`,
+                    type: "resource" as const,
+                    resource: {
+                        uri: 'early://timer/stopped',
+                        mimeType: 'application/json',
+                        text: JSON.stringify({
+                            success: true,
+                            isRunning: false,
+                            id: trackingId,
+                            activityName: activityName,
+                            description: note,
+                            message: `Timer stopped successfully for ${activityName}`
+                        }, null, 2)
+                    }
                 },
             ],
         };
@@ -158,8 +197,16 @@ export async function handleUpdateActiveTimer(apiClient: EarlyApiClient, args: U
             return {
                 content: [
                     {
-                        type: "text" as const,
-                        text: "No active timer found to update.",
+                        type: "resource" as const,
+                        resource: {
+                            uri: 'early://timer/updated',
+                            mimeType: 'application/json',
+                            text: JSON.stringify({
+                                success: false,
+                                isRunning: false,
+                                message: "No active timer found to update"
+                            }, null, 2)
+                        }
                     },
                 ],
             };
@@ -170,12 +217,25 @@ export async function handleUpdateActiveTimer(apiClient: EarlyApiClient, args: U
         const activityName = updatedTracking?.activity?.name || "Unknown";
         const trackingId = updatedTracking?.id || "Unknown";
         const note = updatedTracking?.note?.text || description || "No description";
+        const startedAt = updatedTracking?.duration?.startedAt || null;
 
         return {
             content: [
                 {
-                    type: "text" as const,
-                    text: `✅ Active timer updated successfully!\n\nDetails:\n- Activity: ${activityName}\n- Description: ${note}\n- ID: ${trackingId}`,
+                    type: "resource" as const,
+                    resource: {
+                        uri: 'early://timer/updated',
+                        mimeType: 'application/json',
+                        text: JSON.stringify({
+                            success: true,
+                            isRunning: true,
+                            id: trackingId,
+                            activityName: activityName,
+                            description: note,
+                            startedAt: startedAt,
+                            message: `Timer updated successfully for ${activityName}`
+                        }, null, 2)
+                    }
                 },
             ],
         };

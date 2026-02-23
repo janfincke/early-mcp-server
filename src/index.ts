@@ -14,17 +14,12 @@ import {
   StartTimerInputSchema,
   StopTimerInputSchema,
   GetActiveTimerInputSchema,
-  TimeEntryOutputSchema,
-  ActivitiesOutputSchema,
-  TimerOutputSchema,
   UpdateActiveTimerInputSchema,
   CreateActivityInputSchema,
   UpdateActivityInputSchema,
   ArchiveActivityInputSchema,
   GenerateReportInputSchema,
-  ReportOutputSchema,
   GetCurrentUserInputSchema,
-  UserOutputSchema,
 } from "./schemas.js";
 import {
   CreateTimeEntryArgs,
@@ -104,7 +99,6 @@ class EarlyMcpServer {
         title: "Create Time Entry",
         description: "Create a new time entry with flexible time parameters",
         inputSchema: CreateTimeEntryInputSchema as any,
-        outputSchema: TimeEntryOutputSchema as any,
         annotations: {
           destructiveHint: false,
         },
@@ -137,7 +131,6 @@ class EarlyMcpServer {
         title: "Edit Time Entry",
         description: "Edit an existing time entry",
         inputSchema: EditTimeEntryInputSchema as any,
-        outputSchema: TimeEntryOutputSchema as any,
         annotations: {
           destructiveHint: false,
         },
@@ -154,7 +147,6 @@ class EarlyMcpServer {
         title: "Delete Time Entry",
         description: "Delete a time entry by ID",
         inputSchema: DeleteTimeEntryInputSchema as any,
-        outputSchema: TimeEntryOutputSchema as any, // Using generic output schema for simplicity
         annotations: {
           destructiveHint: true,
         },
@@ -187,7 +179,6 @@ class EarlyMcpServer {
         title: "Create Activity",
         description: "Create a new activity (project)",
         inputSchema: CreateActivityInputSchema as any,
-        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
         annotations: {
           destructiveHint: false,
         },
@@ -204,7 +195,6 @@ class EarlyMcpServer {
         title: "Update Activity",
         description: "Update an existing activity",
         inputSchema: UpdateActivityInputSchema as any,
-        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
         annotations: {
           destructiveHint: false,
         },
@@ -221,7 +211,6 @@ class EarlyMcpServer {
         title: "Archive Activity",
         description: "Archive or delete an activity",
         inputSchema: ArchiveActivityInputSchema as any,
-        outputSchema: ActivitiesOutputSchema as any, // Using generic output schema
         annotations: {
           destructiveHint: true,
         },
@@ -238,7 +227,6 @@ class EarlyMcpServer {
         title: "Generate Report",
         description: "Generate a summary report of time entries for a given period",
         inputSchema: GenerateReportInputSchema as any,
-        outputSchema: ReportOutputSchema as any,
         annotations: {
           readOnlyHint: true,
         },
@@ -255,7 +243,6 @@ class EarlyMcpServer {
         title: "Get Current User",
         description: "Get information about the currently authenticated user",
         inputSchema: GetCurrentUserInputSchema as any,
-        outputSchema: UserOutputSchema as any,
         annotations: {
           readOnlyHint: true,
         },
@@ -272,7 +259,6 @@ class EarlyMcpServer {
         title: "Start Timer",
         description: "Start tracking time for an activity",
         inputSchema: StartTimerInputSchema as any,
-        outputSchema: TimerOutputSchema as any,
         annotations: {
           destructiveHint: false,
         },
@@ -289,7 +275,6 @@ class EarlyMcpServer {
         title: "Stop Timer",
         description: "Stop the currently running timer",
         inputSchema: StopTimerInputSchema as any,
-        outputSchema: TimerOutputSchema as any,
         annotations: {
           destructiveHint: false,
         },
@@ -322,7 +307,6 @@ class EarlyMcpServer {
         title: "Update Active Timer",
         description: "Update the description of the currently running timer",
         inputSchema: UpdateActiveTimerInputSchema as any,
-        outputSchema: TimerOutputSchema as any,
         annotations: {
           destructiveHint: false,
         },
