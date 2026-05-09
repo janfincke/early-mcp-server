@@ -21,7 +21,8 @@
         "start:env": "node start.js",
         "test": "jest",
         "lint": "eslint src/**/*.ts",
-        "lint:fix": "eslint src/**/*.ts --fix"
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "prepublishOnly": "npm run build && npm run lint && npm test"
     },
     "keywords": [
         "mcp",
