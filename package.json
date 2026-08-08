@@ -57,6 +57,11 @@
     "engines": {
         "node": ">=18.0.0"
     },
+    "overrides": {
+        "@istanbuljs/load-nyc-config": {
+            "js-yaml": "^3.15.1"
+        }
+    },
     "publishConfig": {
         "access": "public"
     },
