@@ -35,7 +35,7 @@ export interface DeleteTimeEntryArgs {
   timeEntryId: string;
 }
 
-export interface GetActiveTimerArgs {}
+export type GetActiveTimerArgs = Record<string, never>;
 
 export interface UpdateActiveTimerArgs {
   description: string;
@@ -69,7 +69,7 @@ export interface GenerateReportArgs {
   projectId?: string;
 }
 
-export interface GetCurrentUserArgs {}
+export type GetCurrentUserArgs = Record<string, never>;
 
 // Note: We'll use the MCP SDK's actual response types instead of custom ones
 

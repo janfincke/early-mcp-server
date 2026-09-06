@@ -65,7 +65,7 @@ export class EarlyApiClient {
             // Authentication successful - logging removed to prevent stdio interference
         } catch (error: any) {
             // Authentication failed - logging removed to prevent stdio interference
-            throw new Error(`Authentication failed: ${error?.response?.data?.message || error.message}`);
+            throw new Error(`Authentication failed: ${error?.response?.data?.message || error.message}`, { cause: error });
         }
     }
 
@@ -80,7 +80,7 @@ export class EarlyApiClient {
         try {
             const response = await this.client.get<ApiKeyResponse>("/api/v4/developer/api-access");
             return response.data.apiKey;
-        } catch (error: any) {
+        } catch {
             // Failed to fetch API key - logging removed to prevent stdio interference
             return null;
         }
@@ -99,7 +99,7 @@ export class EarlyApiClient {
             this.accessToken = null;
             delete this.client.defaults.headers.common["Authorization"];
             // Logout successful - logging removed to prevent stdio interference
-        } catch (error: any) {
+        } catch {
             // Logout failed - logging removed to prevent stdio interference
             // Still clear local token even if server request fails
             this.accessToken = null;
@@ -356,4 +356,3 @@ export class EarlyApiClient {
         return allActivities;
     }
 }
-
